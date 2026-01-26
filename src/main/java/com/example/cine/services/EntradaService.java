@@ -65,7 +65,7 @@ public class EntradaService{
 
     // ================================ ASIENTOS LIBRES ==============================
     // Obtenemos los asientos libres de una sala para una proyección
-    public List<Butaca> asientosLibres(Long idProyeccion) {
+    public List<Butaca> asientosLibres(Long idProyeccion, Long id_sala) {
         Proyeccion proyeccion = proyeccionRepository.findById(idProyeccion)
                 .orElseThrow(() -> new RuntimeException("Proyección no encontrada"));
 

@@ -1,12 +1,12 @@
 package com.example.cine.controllers;
 
+import com.example.cine.entity.Butaca;
 import com.example.cine.entity.Entrada;
 import com.example.cine.services.EntradaService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/entradas")
@@ -17,6 +17,7 @@ public class EntradaController{
         this.entradaService = entradaService;
     }
 
+    // ================= COMPRAR ENTRADA =======================================
     @PostMapping("/comprar")
     public ResponseEntity<Entrada> comprarEntrada(
             @RequestParam Long id_asistente,
@@ -26,5 +27,22 @@ public class EntradaController{
     ){
         Entrada entrada = entradaService.comprarEntrada(id_asistente, id_proyeccion, id_butaca, precio);
             return ResponseEntity.ok(entrada);
+    }
+
+    // ================== ASIENTOS LIBRES ============================
+    @GetMapping("/libres")
+    public ResponseEntity<List<Butaca>> asientosLibres(
+            @RequestParam Long id_proyeccion,
+            @RequestParam Long id_sala
+    ){
+        List<Butaca> libres = entradaService.asientosLibres(id_proyeccion, id_sala);
+        return ResponseEntity.ok(libres);
+    }
+
+    // ================== CANCELAR ENTRADA ============================
+    @PutMapping("/cancelar/{idEntrada}")
+    public ResponseEntity<Entrada> cancelarEntrada(@PathVariable Long id_entrada){
+        Entrada entrada = entradaService.cancelarEntrada(id_entrada);
+        return ResponseEntity.ok(entrada);
     }
 }
