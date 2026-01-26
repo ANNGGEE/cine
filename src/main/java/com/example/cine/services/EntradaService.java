@@ -23,6 +23,7 @@ public class EntradaService{
         this.asistenteRepository = asistenteRepository;
     }
 
+    // =================================== COMPRA DE ENTRADA =============================================
     public Entrada comprarEntrada(Long id_asistente, Long id_proyeccion, Long id_butaca, Double precio) {
         Asistente asistente = asistenteRepository.findById(id_asistente)
                 .orElseThrow(() -> new RuntimeException("Asistente no encontrado"));
@@ -62,6 +63,7 @@ public class EntradaService{
         return entradaRepository.save(entrada);
     }
 
+    // ================================ ASIENTOS LIBRES ==============================
     // Obtenemos los asientos libres de una sala para una proyección
     public List<Butaca> asientosLibres(Long idProyeccion) {
         Proyeccion proyeccion = proyeccionRepository.findById(idProyeccion)
@@ -79,6 +81,7 @@ public class EntradaService{
                 .toList();
     }
 
+    // =========================== CANCELAR ENTRADA =================================
     // Cancelamos la entrada
     public Entrada cancelarEntrada(Long id_entrada){
         Entrada entrada = entradaRepository.findById(id_entrada)
