@@ -1,4 +1,10 @@
 package com.example.cine.entity;
 
-public class Entrada {
+import jakarta.persistence.Entity;
+import lombok.Data;
+
+@Entity
+@Data
+public class Entrada{
+
 }
