@@ -1,9 +1,6 @@
 package com.example.cine.entity;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.Date;
@@ -11,13 +8,25 @@ import java.util.Date;
 @Entity
 @Data
 public class Entrada{
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id_entrada;
+
     private Date fecha_compra;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id_proyeccion", referencedColumnName = "id")
+    private Double precio;
+
+    private Boolean cancelada = false;
+
+    @ManyToOne
+    @JoinColumn(name = "id_proyeccion")
     private Proyeccion proyeccion;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id_butaca", referencedColumnName = "id")
+    @ManyToOne
+    @JoinColumn(name = "id_butaca")
     private Butaca butaca;
+
+    @ManyToOne
+    @JoinColumn(name = "id_asistente")
+    private Asistente asistente;
 }

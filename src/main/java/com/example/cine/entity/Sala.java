@@ -3,6 +3,8 @@ package com.example.cine.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @Entity
 public class Sala {
@@ -13,7 +15,9 @@ public class Sala {
     private String descripcion;
     private int numButaca;
 
-    @ManyToOne
-    @JoinColumn(name = "proyeccion_id")
-    private Proyeccion proyeccion;
+    @OneToMany(mappedBy = "sala", cascade = CascadeType.ALL)
+    private List<ProyeccionSala> proyeccionSalas;
+
+    @OneToMany(mappedBy = "sala", cascade = CascadeType.ALL)
+    private List<Butaca> butacas;
 }

@@ -3,26 +3,18 @@ package com.example.cine.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.List;
-
 @Data
 @Entity
-public class Butaca{
+public class ProyeccionSala{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_butaca;
+    private Long id;
 
-    private String posicion;
-
-    private String fila;
-    private Integer numero;
-
-
+    @ManyToOne
+    @JoinColumn(name = "id_proyeccion")
+    private Proyeccion proyeccion;
 
     @ManyToOne
     @JoinColumn(name = "id_sala")
     private Sala sala;
-
-    @OneToMany(mappedBy = "butaca")
-    private List<Entrada> entradas;
 }

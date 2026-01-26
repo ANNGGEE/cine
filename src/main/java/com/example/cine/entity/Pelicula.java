@@ -13,5 +13,5 @@ public class Pelicula {
     private Long id_pelicula;
 
     @OneToMany(mappedBy = "pelicula", cascade = CascadeType.ALL)
-    private List<Proyeccion> proyeccion;
+    private List<Proyeccion> proyecciones;
 }
