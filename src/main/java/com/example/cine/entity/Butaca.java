@@ -17,8 +17,6 @@ public class Butaca{
     private String fila;
     private Integer numero;
 
-
-
     @ManyToOne
     @JoinColumn(name = "id_sala")
     private Sala sala;
