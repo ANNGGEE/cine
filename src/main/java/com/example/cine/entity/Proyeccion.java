@@ -22,4 +22,7 @@ public class Proyeccion {
 
     @OneToMany(mappedBy = "proyeccion", cascade = CascadeType.ALL)
     private List<Sala> sala;
+
+    @OneToOne(mappedBy = "proyeccion")
+    private Entrada entrada;
 }
