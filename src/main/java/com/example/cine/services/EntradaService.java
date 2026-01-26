@@ -1,9 +1,6 @@
 package com.example.cine.services;
 
-import com.example.cine.entity.Asistente;
-import com.example.cine.entity.Butaca;
-import com.example.cine.entity.Entrada;
-import com.example.cine.entity.Proyeccion;
+import com.example.cine.entity.*;
 import com.example.cine.repositories.AsistenteRepository;
 import com.example.cine.repositories.ButacaRepository;
 import com.example.cine.repositories.EntradaRepository;
@@ -36,6 +33,7 @@ public class EntradaService{
         Butaca butaca = butacaRepository.findById(id_butaca)
                 .orElseThrow(() -> new RuntimeException("Butaca no encontrada"));
 
+        Sala sala = butaca.getSala();
         // Verificamos que el asistente no supere las 5 entradas
         List<Entrada> entradasAsistente = entradaRepository.findByAsistente(asistente);
         if(entradasAsistente.size() >= 5){
@@ -48,6 +46,12 @@ public class EntradaService{
             throw new RuntimeException("Butaca ya ocupada en esta proyección");
         }
 
+        // Control de aforo máximo de la sala
+        long entradasVendidas = entradaRepository.findByProyeccion(proyeccion).size();
+        if(entradasVendidas >= sala.getNumButaca()){
+            throw new RuntimeException("Aforo completo, no se pueden vender más entradas");
+        }
+
         // Creamos la entrada
         Entrada entrada = new Entrada();
         entrada.setAsistente(asistente);
@@ -55,6 +59,36 @@ public class EntradaService{
         entrada.setButaca(butaca);
         entrada.setPrecio(precio);
 
+        return entradaRepository.save(entrada);
+    }
+
+    // Obtenemos los asientos libres de una sala para una proyección
+    public List<Butaca> asientosLibres(Long idProyeccion) {
+        Proyeccion proyeccion = proyeccionRepository.findById(idProyeccion)
+                .orElseThrow(() -> new RuntimeException("Proyección no encontrada"));
+
+        // Para simplificar, seleccionamos la primera sala de la proyección
+        Sala sala = proyeccion.getProyeccionSalas().get(0).getSala();
+
+        List<Butaca> todasButacas = sala.getButacas();
+        List<Entrada> entradasVendidas = entradaRepository.findByProyeccion(proyeccion);
+
+        return todasButacas.stream()
+                .filter(b -> entradasVendidas.stream()
+                        .noneMatch(e -> e.getButaca().equals(b) && !e.getCancelada()))
+                .toList();
+    }
+
+    // Cancelamos la entrada
+    public Entrada cancelarEntrada(Long id_entrada){
+        Entrada entrada = entradaRepository.findById(id_entrada)
+                .orElseThrow(() ->  new RuntimeException("Entrada no encontrada"));
+
+        if(entrada.getCancelada()){
+            throw new RuntimeException("Entrada ya cancelada");
+        }
+
+        entrada.setCancelada(true);
         return entradaRepository.save(entrada);
     }
 }

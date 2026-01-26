@@ -8,9 +8,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.WeakHashMap;
 
 @Repository
 public interface EntradaRepository extends JpaRepository<Entrada, Long>{
+    List<Entrada> findByProyeccion(Proyeccion proyeccion);
     List<Entrada> findByProyeccionAndButaca(Proyeccion proyeccion, Butaca butaca);
     List<Entrada> findByAsistente(Asistente asistente);
 }
