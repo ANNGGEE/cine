@@ -1,4 +1,4 @@
 package com.example.cine.controllers;
 
-public class Pelicula {
+public class PeliculaController {
 }

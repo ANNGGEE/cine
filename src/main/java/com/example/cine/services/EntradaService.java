@@ -5,6 +5,7 @@ import com.example.cine.repositories.AsistenteRepository;
 import com.example.cine.repositories.ButacaRepository;
 import com.example.cine.repositories.EntradaRepository;
 import com.example.cine.repositories.ProyeccionRepository;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -97,5 +98,23 @@ public class EntradaService{
 
         entrada.setCancelada(true);
         return entradaRepository.save(entrada);
+    }
+
+    public List<Entrada> entradasPorAsistente(Long id_asistente){
+        Asistente asistente = asistenteRepository.findById(id_asistente)
+                .orElseThrow(() -> new RuntimeException("Asistente no encontrado"));
+
+        return entradaRepository.findByAsistente(asistente);
+    }
+
+    // ===================== OCUPACIÓN PROYECCIÓN ======================================
+    public Long ocupacionProyeccion(Long id_proyeccion){
+        Proyeccion proyeccion = proyeccionRepository.findById(id_proyeccion)
+                .orElseThrow(() -> new RuntimeException("Proyección no encontrada, sorry"));
+
+        // Contamos solo las entradas no canceladas
+        return entradaRepository.findByProyeccion(proyeccion).stream()
+                .filter(e -> !e.getCancelada())
+                .count();
     }
 }

@@ -2,6 +2,7 @@ package com.example.cine.controllers;
 
 import com.example.cine.entity.Butaca;
 import com.example.cine.entity.Entrada;
+import com.example.cine.entity.Proyeccion;
 import com.example.cine.services.EntradaService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -44,5 +45,12 @@ public class EntradaController{
     public ResponseEntity<Entrada> cancelarEntrada(@PathVariable Long id_entrada){
         Entrada entrada = entradaService.cancelarEntrada(id_entrada);
         return ResponseEntity.ok(entrada);
+    }
+
+    @GetMapping("/asistente/{id_asistente}")
+    public ResponseEntity<List<Entrada>> entradasPorAsistente(@PathVariable Long id_asistente){
+        return ResponseEntity.ok(
+                entradaService.entradasPorAsistente(id_asistente)
+        );
     }
 }
