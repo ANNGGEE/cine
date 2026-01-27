@@ -7,6 +7,13 @@ import java.util.Date;
 
 @Entity
 @Data
+@Table(
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        columnNames = {"id_proyeccion", "id_butaca"}
+                )
+        }
+)
 public class Entrada{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

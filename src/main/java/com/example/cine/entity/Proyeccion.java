@@ -17,6 +17,10 @@ public class Proyeccion {
     private Date fecha;
 
     @ManyToOne
+    @JoinColumn(name = "id_sala")
+    private Sala sala;
+
+    @ManyToOne
     @JoinColumn(name = "pelicula")
     private Pelicula pelicula;
 

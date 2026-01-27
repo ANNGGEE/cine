@@ -32,11 +32,11 @@ public class EntradaController{
     // ================== ASIENTOS LIBRES ============================
     @GetMapping("/libres")
     public ResponseEntity<List<Butaca>> asientosLibres(
-            @RequestParam Long id_proyeccion,
-            @RequestParam Long id_sala
+            @RequestParam Long id_proyeccion
     ){
-        List<Butaca> libres = entradaService.asientosLibres(id_proyeccion, id_sala);
-        return ResponseEntity.ok(libres);
+        return ResponseEntity.ok(
+                entradaService.asientosLibres(id_proyeccion)
+        );
     }
 
     // ================== CANCELAR ENTRADA ============================

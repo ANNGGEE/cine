@@ -34,7 +34,10 @@ public class EntradaService{
         Butaca butaca = butacaRepository.findById(id_butaca)
                 .orElseThrow(() -> new RuntimeException("Butaca no encontrada"));
 
-        Sala sala = butaca.getSala();
+        if (!butaca.getSala().getId_sala().equals(proyeccion.getSala().getId_sala())) {
+            throw new RuntimeException("La butaca no pertenece a la sala de esta proyección");
+        }
+
         // Verificamos que el asistente no supere las 5 entradas
         List<Entrada> entradasAsistente = entradaRepository.findByAsistente(asistente);
         if(entradasAsistente.size() >= 5){
@@ -48,6 +51,7 @@ public class EntradaService{
         }
 
         // Control de aforo máximo de la sala
+        Sala sala = proyeccion.getSala();
         long entradasVendidas = entradaRepository.findByProyeccion(proyeccion).size();
         if(entradasVendidas >= sala.getNumButaca()){
             throw new RuntimeException("Aforo completo, no se pueden vender más entradas");
@@ -65,12 +69,12 @@ public class EntradaService{
 
     // ================================ ASIENTOS LIBRES ==============================
     // Obtenemos los asientos libres de una sala para una proyección
-    public List<Butaca> asientosLibres(Long idProyeccion, Long id_sala) {
+    public List<Butaca> asientosLibres(Long idProyeccion) {
         Proyeccion proyeccion = proyeccionRepository.findById(idProyeccion)
                 .orElseThrow(() -> new RuntimeException("Proyección no encontrada"));
 
         // Para simplificar, seleccionamos la primera sala de la proyección
-        Sala sala = proyeccion.getProyeccionSalas().get(0).getSala();
+        Sala sala = proyeccion.getSala();
 
         List<Butaca> todasButacas = sala.getButacas();
         List<Entrada> entradasVendidas = entradaRepository.findByProyeccion(proyeccion);
