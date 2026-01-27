@@ -12,6 +12,10 @@ public class Pelicula {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_pelicula;
 
+    private String titulo;
+    private Integer duracion;
+    private String genero;
+
     @OneToMany(mappedBy = "pelicula", cascade = CascadeType.ALL)
     private List<Proyeccion> proyecciones;
 }

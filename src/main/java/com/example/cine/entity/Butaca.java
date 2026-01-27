@@ -18,7 +18,7 @@ public class Butaca{
     private Integer numero;
 
     @ManyToOne
-    @JoinColumn(name = "id_sala")
+    @JoinColumn(name = "id_sala", nullable = false)
     private Sala sala;
 
     @OneToMany(mappedBy = "butaca")
