@@ -16,8 +16,5 @@ public class Sala {
     private int numButaca;
 
     @OneToMany(mappedBy = "sala", cascade = CascadeType.ALL)
-    private List<ProyeccionSala> proyeccionSalas;
-
-    @OneToMany(mappedBy = "sala", cascade = CascadeType.ALL)
     private List<Butaca> butacas;
 }

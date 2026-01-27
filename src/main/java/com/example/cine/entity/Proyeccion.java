@@ -21,8 +21,5 @@ public class Proyeccion {
     private Pelicula pelicula;
 
     @OneToMany(mappedBy = "proyeccion", cascade = CascadeType.ALL)
-    private List<ProyeccionSala> proyeccionSalas;
-
-    @OneToMany(mappedBy = "proyeccion", cascade = CascadeType.ALL)
     private List<Entrada> entradas;
 }
