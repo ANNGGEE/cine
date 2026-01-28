@@ -26,8 +26,14 @@ public class EntradaController{
             @RequestParam Long id_butaca,
             @RequestParam Double precio
     ){
-        Entrada entrada = entradaService.comprarEntrada(id_asistente, id_proyeccion, id_butaca, precio);
-            return ResponseEntity.ok(entrada);
+        return ResponseEntity.ok(
+                entradaService.comprarEntrada(
+                        id_asistente,
+                        id_proyeccion,
+                        id_butaca,
+                        precio
+                )
+        );
     }
 
     // ================== ASIENTOS LIBRES ============================
@@ -43,14 +49,26 @@ public class EntradaController{
     // ================== CANCELAR ENTRADA ============================
     @PutMapping("/cancelar/{idEntrada}")
     public ResponseEntity<Entrada> cancelarEntrada(@PathVariable Long id_entrada){
-        Entrada entrada = entradaService.cancelarEntrada(id_entrada);
-        return ResponseEntity.ok(entrada);
+        return ResponseEntity.ok(
+                entradaService.cancelarEntrada(id_entrada)
+        );
     }
 
+    // ======================= ENTRADAS POR ASISTENTE ================================
     @GetMapping("/asistente/{id_asistente}")
     public ResponseEntity<List<Entrada>> entradasPorAsistente(@PathVariable Long id_asistente){
         return ResponseEntity.ok(
                 entradaService.entradasPorAsistente(id_asistente)
+        );
+    }
+
+    // ======================== OCUPACIÓN PROYECCIÓN =============================
+    @GetMapping("/ocupacion/{id_proyeccion}")
+    public ResponseEntity<Long> ocupacionProyeccion(
+            @PathVariable Long id_proyeccion
+    ){
+        return ResponseEntity.ok(
+                entradaService.ocupacionProyeccion(id_proyeccion)
         );
     }
 }
