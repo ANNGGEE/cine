@@ -3,7 +3,8 @@ package com.example.cine.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -13,15 +14,15 @@ public class Proyeccion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_proyeccion;
 
-    private Date horario;
-    private Date fecha;
+    private LocalDate horario;
+    private LocalDateTime fecha;
 
     @ManyToOne
     @JoinColumn(name = "id_sala", nullable = false)
     private Sala sala;
 
     @ManyToOne
-    @JoinColumn(name = "pelicula", nullable = false)
+    @JoinColumn(name = "id_pelicula", nullable = false)
     private Pelicula pelicula;
 
     @OneToMany(mappedBy = "proyeccion", cascade = CascadeType.ALL)

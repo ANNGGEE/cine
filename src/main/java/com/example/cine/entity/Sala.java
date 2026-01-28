@@ -14,6 +14,7 @@ public class Sala {
     private Long id_sala;
 
     private String descripcion;
+    private int capacidad;
     private int numButaca;
 
     @OneToMany(mappedBy = "sala", cascade = CascadeType.ALL)

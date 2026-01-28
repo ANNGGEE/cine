@@ -12,6 +12,8 @@ public class Asistente {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_asistente;
 
+    private String nombre;
+
     @OneToMany(mappedBy = "asistente")
     private List<Entrada> entradas;
 }
