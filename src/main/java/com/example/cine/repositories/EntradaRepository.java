@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.WeakHashMap;
 
 @Repository
 public interface EntradaRepository extends JpaRepository<Entrada, Long>{
@@ -17,7 +16,7 @@ public interface EntradaRepository extends JpaRepository<Entrada, Long>{
     List<Entrada> findByAsistente(Asistente asistente);
     List<Entrada> findByAsistenteAndCanceladaFalse(Asistente asistente);
 
-    boolean existByProyeccionAndButacaAndCanceladaFalse(
+    boolean existsByProyeccionAndButacaAndCanceladaFalse(
             Proyeccion proyeccion,
             Butaca butaca
     );

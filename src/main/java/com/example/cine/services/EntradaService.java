@@ -58,7 +58,7 @@ public class EntradaService{
         }
 
         // ======================= BUTACA OCUPADA EN ESA PROYECCIÓN ==========================
-        if(entradaRepository.existByProyeccionAndButacaAndCanceladaFalse(proyeccion, butaca)){
+        if(entradaRepository.existsByProyeccionAndButacaAndCanceladaFalse(proyeccion, butaca)){
             throw new RuntimeException("La butaca ya está ocupada en esta proyección");
         }
 
@@ -71,7 +71,7 @@ public class EntradaService{
         // Control de aforo máximo de la sala
         Sala sala = proyeccion.getSala();
         long entradasVendidas = entradaRepository.findByProyeccion(proyeccion).size();
-        if(entradasVendidas >= sala.getNumButaca()){
+        if(entradasVendidas >= sala.getCapacidad()){
             throw new RuntimeException("Aforo completo, no se pueden vender más entradas");
         }
 
