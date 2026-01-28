@@ -5,9 +5,9 @@ import com.example.cine.repositories.AsistenteRepository;
 import com.example.cine.repositories.ButacaRepository;
 import com.example.cine.repositories.EntradaRepository;
 import com.example.cine.repositories.ProyeccionRepository;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -35,14 +35,31 @@ public class EntradaService{
         Butaca butaca = butacaRepository.findById(id_butaca)
                 .orElseThrow(() -> new RuntimeException("Butaca no encontrada"));
 
+        // No se pueden comprar entradas de proyecciones pasadas
+        LocalDateTime fechaHoraProyeccion =
+                LocalDateTime.of(proyeccion.getFecha(), proyeccion.getHorario());
+
+        if(fechaHoraProyeccion.isBefore(LocalDateTime.now())){
+            throw new RuntimeException("No se pueden comprar entradas para la proyección");
+        }
+
+        // La butaca tiene que pertenecer a la sala de la proyección
         if (!butaca.getSala().getId_sala().equals(proyeccion.getSala().getId_sala())) {
             throw new RuntimeException("La butaca no pertenece a la sala de esta proyección");
         }
 
         // Verificamos que el asistente no supere las 5 entradas
-        List<Entrada> entradasAsistente = entradaRepository.findByAsistente(asistente);
-        if(entradasAsistente.size() >= 5){
+        long entradasAsistente = entradaRepository
+                .findByAsistenteAndCanceladaFalse(asistente)
+                .size();
+
+        if(entradasAsistente >= 5){
             throw new RuntimeException("El asistente ya tiene 5 entradas");
+        }
+
+        // ======================= BUTACA OCUPADA EN ESA PROYECCIÓN ==========================
+        if(entradaRepository.existByProyeccionAndButacaAndCanceladaFalse(proyeccion, butaca)){
+            throw new RuntimeException("La butaca ya está ocupada en esta proyección");
         }
 
         // Verificamos que la butaca esté libre para la proyección
@@ -96,9 +113,21 @@ public class EntradaService{
             throw new RuntimeException("Entrada ya cancelada");
         }
 
+        LocalDateTime fechaHoraProyeccion =
+                LocalDateTime.of(
+                        entrada.getProyeccion().getFecha(),
+                        entrada.getProyeccion().getHorario()
+                );
+
+        if(fechaHoraProyeccion.minusHours(2).isBefore(LocalDateTime.now())){
+            throw new RuntimeException("No se puede cancelar la entrada con menos de dos horas");
+        }
+
         entrada.setCancelada(true);
         return entradaRepository.save(entrada);
     }
+
+    // =================== ENTRADAS POR CLIENTE ================================
 
     public List<Entrada> entradasPorAsistente(Long id_asistente){
         Asistente asistente = asistenteRepository.findById(id_asistente)
@@ -113,8 +142,6 @@ public class EntradaService{
                 .orElseThrow(() -> new RuntimeException("Proyección no encontrada, sorry"));
 
         // Contamos solo las entradas no canceladas
-        return entradaRepository.findByProyeccion(proyeccion).stream()
-                .filter(e -> !e.getCancelada())
-                .count();
+        return entradaRepository.countByProyeccionAndCanceladaFalse(proyeccion);
     }
 }

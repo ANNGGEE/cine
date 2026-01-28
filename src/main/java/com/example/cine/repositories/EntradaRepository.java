@@ -15,4 +15,12 @@ public interface EntradaRepository extends JpaRepository<Entrada, Long>{
     List<Entrada> findByProyeccion(Proyeccion proyeccion);
     List<Entrada> findByProyeccionAndButaca(Proyeccion proyeccion, Butaca butaca);
     List<Entrada> findByAsistente(Asistente asistente);
+    List<Entrada> findByAsistenteAndCanceladaFalse(Asistente asistente);
+
+    boolean existByProyeccionAndButacaAndCanceladaFalse(
+            Proyeccion proyeccion,
+            Butaca butaca
+    );
+
+    long countByProyeccionAndCanceladaFalse(Proyeccion proyeccion);
 }

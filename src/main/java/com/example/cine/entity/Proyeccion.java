@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Data
@@ -14,8 +14,8 @@ public class Proyeccion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_proyeccion;
 
-    private LocalDate horario;
-    private LocalDateTime fecha;
+    private LocalTime horario;
+    private LocalDate fecha;
 
     @ManyToOne
     @JoinColumn(name = "id_sala", nullable = false)
