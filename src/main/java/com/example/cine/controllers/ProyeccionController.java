@@ -5,7 +5,6 @@ import com.example.cine.entity.Proyeccion;
 import com.example.cine.services.EntradaService;
 import com.example.cine.services.ProyeccionService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -24,8 +23,8 @@ public class ProyeccionController {
 
     // ============= CREAR PROYECCIÓN ================
     @PostMapping("/crear")
-    public ResponseEntity<Proyeccion> crearProyeccion(@RequestBody Proyeccion proyeccion){
-        return ResponseEntity.ok(proyeccionService.crearProyeccion(proyeccion));
+    public ResponseEntity<Proyeccion> crearProyeccion(@RequestBody Proyeccion proyeccion, @RequestParam Long id_pelicula, @RequestParam Long id_sala){
+        return ResponseEntity.ok(proyeccionService.crearProyeccion(proyeccion, id_pelicula, id_sala));
     }
 
     // ================= OBTENEMOS TODAS LAS PROYECCIONES ==================================
@@ -34,20 +33,29 @@ public class ProyeccionController {
         return ResponseEntity.ok(proyeccionService.obtenerTodas());
     }
 
-    // ========================== OBTENER PROYECCIONES POR PELÍCULA =================================
-    @GetMapping("/pelicula/{id_pelicula}")
-    public ResponseEntity<List<Proyeccion>> proyeccionesPorPelicula(
-            @PathVariable Long id_pelicula
-    ){
-        return ResponseEntity.ok(proyeccionService.proyeccionesPorPelicula(id_pelicula));
+    // ================== OBTENEMOS POR ID ==============================
+    @GetMapping("/{id}")
+    public ResponseEntity<Proyeccion> obtenerProyeccion(@PathVariable Long id){
+        return ResponseEntity.ok(proyeccionService.obtenerPorId(id));
+    }
+
+    // ===================== ACTUALIZAR PROYECCIÓN =========================
+    @PutMapping("/{id}")
+    public  ResponseEntity<Proyeccion> actualizarProyeccion(@PathVariable Long id, @RequestBody Proyeccion proyeccion){
+        return ResponseEntity.ok(proyeccionService.actualizarProyeccion(id, proyeccion));
+    }
+
+    // ==================== ELIMINAR PROYECCIÓN ====================
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminarProyeccion(@PathVariable Long id){
+        proyeccionService.eliminarProyeccion(id);
+        return ResponseEntity.noContent().build();
     }
 
     // =========================== OBTENER PROYECCIONES POR PELÍCULA ================
     @GetMapping("/pelicula/{id_pelicula}")
-    public ResponseEntity<List<Proyeccion>> proyeccionesPorPelicula(
-            @PathVariable Long id_proyeccion
-    ){
-        return ResponseEntity.ok(proyeccionService.obtenerPorId(id_proyeccion));
+    public ResponseEntity<List<Proyeccion>> listarPorPelicula(@PathVariable Long idPelicula) {
+        return ResponseEntity.ok(proyeccionService.obtenerPorPelicula(idPelicula));
     }
 
     // ==================== OBTENEMOS PROYECCIONES POR SALA =============================

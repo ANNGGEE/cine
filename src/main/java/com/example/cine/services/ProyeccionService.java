@@ -28,20 +28,15 @@ public class ProyeccionService{
     }
 
     // =================== CREAR PROYECCIÓN ===========================
-    public Proyeccion crearProyeccion(Proyeccion proyeccion){
-        // Validamos que la película exista
-        Long id_pelicula = proyeccion.getPelicula().getId_pelicula();
-        Pelicula pelicula = peliculaRepository.findById(id_pelicula)
+    public Proyeccion crearProyeccion(Proyeccion proyeccion, Long idPelicula, Long idSala) {
+        Pelicula pelicula = peliculaRepository.findById(idPelicula)
                 .orElseThrow(() -> new RuntimeException("Película no encontrada"));
-        proyeccion.setPelicula(pelicula);
-
-        // Validamos que la sala exista
-        Long id_sala = proyeccion.getSala().getId_sala();
-        Sala sala = salaRepository.findById(id_sala)
+        Sala sala = salaRepository.findById(idSala)
                 .orElseThrow(() -> new RuntimeException("Sala no encontrada"));
+
+        proyeccion.setPelicula(pelicula);
         proyeccion.setSala(sala);
 
-        // AÑADIR MÁS TARDE NO PERMITIR PROYECCIONES EN FECHAS PASADAS Y NO PERMITIR QUE UNA SALA TENGA DOS PROYECCIONES AL MISMOT TIEMPO
         return proyeccionRepository.save(proyeccion);
     }
 
@@ -63,9 +58,11 @@ public class ProyeccionService{
         return proyeccionRepository.findByPelicula(pelicula);
     }
 
+    // ================== LISTAR POR PELICULA ===========================
     public List<Proyeccion> obtenerPorSala(Long id_sala){
-
-        return proyeccionRepository.findBySalaId_sala(id_sala);
+        Sala sala = salaRepository.findById(id_sala)
+                .orElseThrow(() -> new RuntimeException("Sala no encontrada"));
+        return proyeccionRepository.findBySala(sala);
     }
 
     public List<Proyeccion> obtenerPorFecha(LocalDate fecha) {
@@ -81,5 +78,27 @@ public class ProyeccionService{
                 .stream()
                 .filter(e -> !e.getCancelada())
                 .count();
+    }
+
+    // =================== ACTUALIZAR PROYECCIÓN ======================
+    public Proyeccion actualizarProyeccion(Long id, Proyeccion proyeccionActualizada){
+        Proyeccion proyeccion = obtenerPorId(id);
+        proyeccion.setHorario(proyeccionActualizada.getHorario());
+        proyeccion.setFecha(proyeccionActualizada.getFecha());
+        // Actualizamos la sala o película si es necesario
+        return proyeccionRepository.save(proyeccion);
+    }
+
+    // ======================== ELIMINAR PROYECCIÓN =====================
+    public void eliminarProyeccion(Long id){
+        Proyeccion proyeccion = obtenerPorId(id);
+        proyeccionRepository.delete(proyeccion);
+    }
+
+    // =============== LISTAMOS LA PROYECCIÓN POR PELICULA ================
+    public List<Proyeccion> obtenerPorPelicula(Long id_pelicula){
+        Pelicula pelicula = peliculaRepository.findById(id_pelicula)
+                .orElseThrow(() -> new RuntimeException("Película no encontrada"));
+        return proyeccionRepository.findByPelicula(pelicula);
     }
 }
