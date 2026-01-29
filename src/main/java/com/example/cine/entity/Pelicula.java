@@ -10,7 +10,7 @@ import java.util.List;
 public class Pelicula {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_pelicula;
+    private Long idPelicula;
 
     private String titulo;
     private Integer duracion;

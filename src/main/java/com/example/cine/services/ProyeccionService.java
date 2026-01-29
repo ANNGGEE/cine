@@ -46,21 +46,21 @@ public class ProyeccionService{
     }
 
     // ========================== OBTENER POR ID ============================
-    public Proyeccion obtenerPorId(Long id_proyeccion){
-        return proyeccionRepository.findById(id_proyeccion)
+    public Proyeccion obtenerPorId(Long idProyeccion){
+        return proyeccionRepository.findById(idProyeccion)
                 .orElseThrow(() -> new RuntimeException("Proyección no encontrada"));
     }
 
     // ============= OBTENER POR PELICULA ================================
-    public List<Proyeccion> proyeccionPorPelicula(Long id_pelicula){
-        Pelicula pelicula = peliculaRepository.findById(id_pelicula)
+    public List<Proyeccion> proyeccionPorPelicula(Long idPelicula){
+        Pelicula pelicula = peliculaRepository.findById(idPelicula)
                 .orElseThrow(() -> new RuntimeException("Película no encontrada"));
         return proyeccionRepository.findByPelicula(pelicula);
     }
 
     // ================== LISTAR POR PELICULA ===========================
-    public List<Proyeccion> obtenerPorSala(Long id_sala){
-        Sala sala = salaRepository.findById(id_sala)
+    public List<Proyeccion> obtenerPorSala(Long idSala){
+        Sala sala = salaRepository.findById(idSala)
                 .orElseThrow(() -> new RuntimeException("Sala no encontrada"));
         return proyeccionRepository.findBySala(sala);
     }
@@ -70,8 +70,8 @@ public class ProyeccionService{
         return proyeccionRepository.findByFecha(fecha);
     }
 
-    public long ocupacionProyeccion(Long id_proyeccion){
-        Proyeccion proyeccion = proyeccionRepository.findById(id_proyeccion)
+    public long ocupacionProyeccion(Long idProyeccion){
+        Proyeccion proyeccion = proyeccionRepository.findById(idProyeccion)
                 .orElseThrow(() -> new RuntimeException("Proyeccion no encontrada"));
 
         return entradaRepository.findByProyeccion(proyeccion)
@@ -96,8 +96,8 @@ public class ProyeccionService{
     }
 
     // =============== LISTAMOS LA PROYECCIÓN POR PELICULA ================
-    public List<Proyeccion> obtenerPorPelicula(Long id_pelicula){
-        Pelicula pelicula = peliculaRepository.findById(id_pelicula)
+    public List<Proyeccion> obtenerPorPelicula(Long idPelicula){
+        Pelicula pelicula = peliculaRepository.findById(idPelicula)
                 .orElseThrow(() -> new RuntimeException("Película no encontrada"));
         return proyeccionRepository.findByPelicula(pelicula);
     }

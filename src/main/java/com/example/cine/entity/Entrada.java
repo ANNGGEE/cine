@@ -10,14 +10,14 @@ import java.time.LocalDateTime;
 @Table(
         uniqueConstraints = {
                 @UniqueConstraint(
-                        columnNames = {"id_proyeccion", "id_butaca"}
+                        columnNames = {"idProyeccion", "idButaca"}
                 )
         }
 )
 public class Entrada{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_entrada;
+    private Long idEntrada;
 
     private LocalDateTime fecha_compra;
 
@@ -26,14 +26,14 @@ public class Entrada{
     private Boolean cancelada = false;
 
     @ManyToOne
-    @JoinColumn(name = "id_proyeccion", nullable = false)
+    @JoinColumn(name = "idProyeccion", nullable = false)
     private Proyeccion proyeccion;
 
     @ManyToOne
-    @JoinColumn(name = "id_butaca", nullable = false)
+    @JoinColumn(name = "idButaca", nullable = false)
     private Butaca butaca;
 
     @ManyToOne
-    @JoinColumn(name = "id_asistente", nullable = false)
+    @JoinColumn(name = "idAsistente", nullable = false)
     private Asistente asistente;
 }

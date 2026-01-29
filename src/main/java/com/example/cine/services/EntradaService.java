@@ -25,14 +25,14 @@ public class EntradaService{
     }
 
     // =================================== COMPRA DE ENTRADA =============================================
-    public Entrada comprarEntrada(Long id_asistente, Long id_proyeccion, Long id_butaca, Double precio) {
-        Asistente asistente = asistenteRepository.findById(id_asistente)
+    public Entrada comprarEntrada(Long idAsistente, Long idProyeccion, Long idButaca, Double precio) {
+        Asistente asistente = asistenteRepository.findById(idAsistente)
                 .orElseThrow(() -> new RuntimeException("Asistente no encontrado"));
 
-        Proyeccion proyeccion = proyeccionRepository.findById(id_proyeccion)
+        Proyeccion proyeccion = proyeccionRepository.findById(idProyeccion)
                 .orElseThrow(() -> new RuntimeException("Proyección no encontrada"));
 
-        Butaca butaca = butacaRepository.findById(id_butaca)
+        Butaca butaca = butacaRepository.findById(idButaca)
                 .orElseThrow(() -> new RuntimeException("Butaca no encontrada"));
 
         // No se pueden comprar entradas de proyecciones pasadas
@@ -44,7 +44,7 @@ public class EntradaService{
         }
 
         // La butaca tiene que pertenecer a la sala de la proyección
-        if (!butaca.getSala().getId_sala().equals(proyeccion.getSala().getId_sala())) {
+        if (!butaca.getSala().getIdSala().equals(proyeccion.getSala().getIdSala())) {
             throw new RuntimeException("La butaca no pertenece a la sala de esta proyección");
         }
 
@@ -105,8 +105,8 @@ public class EntradaService{
 
     // =========================== CANCELAR ENTRADA =================================
     // Cancelamos la entrada
-    public Entrada cancelarEntrada(Long id_entrada){
-        Entrada entrada = entradaRepository.findById(id_entrada)
+    public Entrada cancelarEntrada(Long idEntrada){
+        Entrada entrada = entradaRepository.findById(idEntrada)
                 .orElseThrow(() ->  new RuntimeException("Entrada no encontrada"));
 
         if(entrada.getCancelada()){
@@ -129,16 +129,16 @@ public class EntradaService{
 
     // =================== ENTRADAS POR CLIENTE ================================
 
-    public List<Entrada> entradasPorAsistente(Long id_asistente){
-        Asistente asistente = asistenteRepository.findById(id_asistente)
+    public List<Entrada> entradasPorAsistente(Long idAsistente){
+        Asistente asistente = asistenteRepository.findById(idAsistente)
                 .orElseThrow(() -> new RuntimeException("Asistente no encontrado"));
 
         return entradaRepository.findByAsistente(asistente);
     }
 
     // ===================== OCUPACIÓN PROYECCIÓN ======================================
-    public Long ocupacionProyeccion(Long id_proyeccion){
-        Proyeccion proyeccion = proyeccionRepository.findById(id_proyeccion)
+    public Long ocupacionProyeccion(Long idProyeccion){
+        Proyeccion proyeccion = proyeccionRepository.findById(idProyeccion)
                 .orElseThrow(() -> new RuntimeException("Proyección no encontrada, sorry"));
 
         // Contamos solo las entradas no canceladas

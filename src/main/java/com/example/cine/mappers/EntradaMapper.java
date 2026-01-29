@@ -8,7 +8,7 @@ public class EntradaMapper {
     public static EntradaDTO toDTO(Entrada entrada) {
         EntradaDTO dto = new EntradaDTO();
 
-        dto.setIdEntrada(entrada.getId_entrada());
+        dto.setIdEntrada(entrada.getIdEntrada());
         dto.setNombreAsistente(entrada.getAsistente().getNombre());
         dto.setTituloPelicula(entrada.getProyeccion().getPelicula().getTitulo());
         dto.setSala(entrada.getProyeccion().getSala().getDescripcion());

@@ -20,8 +20,8 @@ public class ButacaService {
     }
 
     // ================= CREAR BUTACA ======================
-    public Butaca crearButaca(Butaca butaca, Long id_sala){
-        Sala sala = salaRepository.findById(id_sala)
+    public Butaca crearButaca(Butaca butaca, Long idSala){
+        Sala sala = salaRepository.findById(idSala)
                 .orElseThrow(() -> new RuntimeException("Sala no encontrada"));
 
         butaca.setSala(sala);
@@ -40,8 +40,8 @@ public class ButacaService {
     }
 
     // ================ OBTENEMOS POR SALA ===================
-    public List<Butaca> obtenerPorSala(Long id_sala){
-        Sala sala = salaRepository.findById(id_sala)
+    public List<Butaca> obtenerPorSala(Long idSala){
+        Sala sala = salaRepository.findById(idSala)
                 .orElseThrow(() -> new RuntimeException("Sala no encontrada"));
 
         return butacaRepository.findBySala(sala);

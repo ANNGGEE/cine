@@ -10,7 +10,7 @@ import java.util.List;
 public class Butaca{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_butaca;
+    private Long idButaca;
 
     private String posicion;
 
@@ -18,7 +18,7 @@ public class Butaca{
     private Integer numero;
 
     @ManyToOne
-    @JoinColumn(name = "id_sala", nullable = false)
+    @JoinColumn(name = "idSala", nullable = false)
     private Sala sala;
 
     @OneToMany(mappedBy = "butaca")

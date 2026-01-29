@@ -21,8 +21,8 @@ public class PeliculaService {
     }
 
     // ===================== OBTENER POR ID ======================
-    public Pelicula obtenerPorId(Long id_pelicula){
-        return peliculaRepository.findById(id_pelicula)
+    public Pelicula obtenerPorId(Long idPelicula){
+        return peliculaRepository.findById(idPelicula)
                 .orElseThrow(() -> new RuntimeException("Película no encontrada"));
     }
 

@@ -31,8 +31,8 @@ public class SalaService {
     }
 
     // ============================== OBTENER SALAS POR ID =========================
-    public Sala obtenerPorId(Long id_sala){
-        return salaRepository.findById(id_sala)
+    public Sala obtenerPorId(Long idSala){
+        return salaRepository.findById(idSala)
                 .orElseThrow(() -> new RuntimeException("Sala no encontrada"));
     }
 

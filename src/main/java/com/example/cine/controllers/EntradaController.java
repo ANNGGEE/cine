@@ -3,7 +3,6 @@ package com.example.cine.controllers;
 import com.example.cine.dto.EntradaDTO;
 import com.example.cine.entity.Butaca;
 import com.example.cine.entity.Entrada;
-import com.example.cine.entity.Proyeccion;
 import com.example.cine.mappers.EntradaMapper;
 import com.example.cine.services.EntradaService;
 import org.springframework.http.ResponseEntity;
@@ -23,17 +22,17 @@ public class EntradaController{
     // ================= COMPRAR ENTRADA =======================================
     @PostMapping("/comprar")
     public ResponseEntity<EntradaDTO> comprarEntrada(
-            @RequestParam Long id_asistente,
-            @RequestParam Long id_proyeccion,
-            @RequestParam Long id_butaca,
+            @RequestParam Long idAsistente,
+            @RequestParam Long idProyeccion,
+            @RequestParam Long idButaca,
             @RequestParam Double precio
     ){
         return ResponseEntity.ok(
                 EntradaMapper.toDTO(
                 entradaService.comprarEntrada(
-                        id_asistente,
-                        id_proyeccion,
-                        id_butaca,
+                        idAsistente,
+                        idProyeccion,
+                        idButaca,
                         precio
                 )
                 )
@@ -43,26 +42,26 @@ public class EntradaController{
     // ================== ASIENTOS LIBRES ============================
     @GetMapping("/libres")
     public ResponseEntity<List<Butaca>> asientosLibres(
-            @RequestParam Long id_proyeccion
+            @RequestParam Long idProyeccion
     ){
         return ResponseEntity.ok(
-                entradaService.asientosLibres(id_proyeccion)
+                entradaService.asientosLibres(idProyeccion)
         );
     }
 
     // ================== CANCELAR ENTRADA ============================
     @PutMapping("/cancelar/{id_entrada}")
-    public ResponseEntity<Entrada> cancelarEntrada(@PathVariable Long id_entrada){
+    public ResponseEntity<Entrada> cancelarEntrada(@PathVariable Long idEntrada){
         return ResponseEntity.ok(
-                entradaService.cancelarEntrada(id_entrada)
+                entradaService.cancelarEntrada(idEntrada)
         );
     }
 
     // ======================= ENTRADAS POR ASISTENTE ================================
     @GetMapping("/asistente/{id_asistente}")
-    public ResponseEntity<List<EntradaDTO>> entradasPorAsistente(@PathVariable Long id_asistente){
+    public ResponseEntity<List<EntradaDTO>> entradasPorAsistente(@PathVariable Long idAsistente){
         return ResponseEntity.ok(
-                entradaService.entradasPorAsistente(id_asistente)
+                entradaService.entradasPorAsistente(idAsistente)
                         .stream()
                         .map(EntradaMapper::toDTO)
                         .toList()
@@ -70,12 +69,12 @@ public class EntradaController{
     }
 
     // ======================== OCUPACIÓN PROYECCIÓN =============================
-    @GetMapping("/ocupacion/{id_proyeccion}")
+    @GetMapping("/ocupacion/{idProyeccion}")
     public ResponseEntity<Long> ocupacionProyeccion(
-            @PathVariable Long id_proyeccion
+            @PathVariable Long idProyeccion
     ){
         return ResponseEntity.ok(
-                entradaService.ocupacionProyeccion(id_proyeccion)
+                entradaService.ocupacionProyeccion(idProyeccion)
         );
     }
 }

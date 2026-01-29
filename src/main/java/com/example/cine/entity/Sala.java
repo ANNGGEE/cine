@@ -11,7 +11,7 @@ import java.util.List;
 public class Sala {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_sala;
+    private Long idSala;
 
     private int numero;
     private String descripcion;

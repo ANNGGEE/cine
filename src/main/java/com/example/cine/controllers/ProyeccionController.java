@@ -23,8 +23,8 @@ public class ProyeccionController {
 
     // ============= CREAR PROYECCIÓN ================
     @PostMapping("/crear")
-    public ResponseEntity<Proyeccion> crearProyeccion(@RequestBody Proyeccion proyeccion, @RequestParam Long id_pelicula, @RequestParam Long id_sala){
-        return ResponseEntity.ok(proyeccionService.crearProyeccion(proyeccion, id_pelicula, id_sala));
+    public ResponseEntity<Proyeccion> crearProyeccion(@RequestBody Proyeccion proyeccion, @RequestParam Long idPelicula, @RequestParam Long idSala){
+        return ResponseEntity.ok(proyeccionService.crearProyeccion(proyeccion, idPelicula, idSala));
     }
 
     // ================= OBTENEMOS TODAS LAS PROYECCIONES ==================================
@@ -53,16 +53,16 @@ public class ProyeccionController {
     }
 
     // =========================== OBTENER PROYECCIONES POR PELÍCULA ================
-    @GetMapping("/pelicula/{id_pelicula}")
+    @GetMapping("/pelicula/{idPelicula}")
     public ResponseEntity<List<Proyeccion>> listarPorPelicula(@PathVariable Long idPelicula) {
         return ResponseEntity.ok(proyeccionService.obtenerPorPelicula(idPelicula));
     }
 
     // ==================== OBTENEMOS PROYECCIONES POR SALA =============================
-    @GetMapping("/sala/{id_sala}")
-    public ResponseEntity<List<Proyeccion>> proyeccionesPorSala(@PathVariable Long id_sala){
+    @GetMapping("/sala/{idSala}")
+    public ResponseEntity<List<Proyeccion>> proyeccionesPorSala(@PathVariable Long idSala){
         return ResponseEntity.ok(
-                proyeccionService.obtenerPorSala(id_sala)
+                proyeccionService.obtenerPorSala(idSala)
         );
     }
 
@@ -75,10 +75,10 @@ public class ProyeccionController {
     }
 
     // ===================== OCUPACIÓN DE UNA PROYECCIÓN ===========================================
-    @GetMapping("/ocupacion/{id_proyeccion}")
-    public ResponseEntity<Long> ocupacion(@PathVariable Long id_proyeccion){
+    @GetMapping("/ocupacion/{idProyeccion}")
+    public ResponseEntity<Long> ocupacion(@PathVariable Long idProyeccion){
         return ResponseEntity.ok(
-                entradaService.ocupacionProyeccion(id_proyeccion)
+                entradaService.ocupacionProyeccion(idProyeccion)
         );
     }
 }

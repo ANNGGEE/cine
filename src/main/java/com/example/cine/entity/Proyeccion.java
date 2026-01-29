@@ -12,17 +12,17 @@ import java.util.List;
 public class Proyeccion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_proyeccion;
+    private Long idproyeccion;
 
     private LocalTime horario;
     private LocalDate fecha;
 
     @ManyToOne
-    @JoinColumn(name = "id_sala", nullable = false)
+    @JoinColumn(name = "idSala", nullable = false)
     private Sala sala;
 
     @ManyToOne
-    @JoinColumn(name = "id_pelicula", nullable = false)
+    @JoinColumn(name = "idPelicula", nullable = false)
     private Pelicula pelicula;
 
     @OneToMany(mappedBy = "proyeccion", cascade = CascadeType.ALL)

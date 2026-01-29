@@ -20,7 +20,7 @@ public class AsistenteController {
     @PostMapping("/crear")
     public ResponseEntity<Asistente> crearAsistente(@RequestBody Asistente asistente){
         Asistente creado = asistenteService.crearAsistente(asistente);
-        return ResponseEntity.ok(asistenteService.ok(creado));
+        return ResponseEntity.ok(creado);
     }
 
     // ================ OBTENER TODOS LOS ASISTENTES =================
