@@ -13,6 +13,7 @@ public class Sala {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_sala;
 
+    private int numero;
     private String descripcion;
     private int capacidad;
     private int numButaca;

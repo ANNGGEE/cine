@@ -16,8 +16,8 @@ public class SalaService {
 
     // ================= CREAR SALA =================
     public Sala crearSala(Sala sala) {
-        if (sala.getNombre() == null || sala.getNombre().isBlank()) {
-            throw new RuntimeException("El nombre de la sala es obligatorio");
+        if (sala.getNumero() <= 0) {
+            throw new RuntimeException("El número de la sala debe ser mayor que 0");
         }
         if (sala.getNumButaca() <= 0) {
             throw new RuntimeException("La sala debe tener al menos 1 butaca");
