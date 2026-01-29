@@ -1,6 +1,7 @@
 package com.example.cine.controllers;
 
 
+import com.example.cine.dto.ProyeccionDTO;
 import com.example.cine.entity.Proyeccion;
 import com.example.cine.services.EntradaService;
 import com.example.cine.services.ProyeccionService;
@@ -42,8 +43,17 @@ public class ProyeccionController {
 
     // ================== OBTENEMOS POR ID ==============================
     @GetMapping("/{id}")
-    public ResponseEntity<Proyeccion> obtenerProyeccion(@PathVariable Long id){
-        return ResponseEntity.ok(proyeccionService.obtenerPorId(id));
+    public ResponseEntity<ProyeccionDTO> obtenerProyeccion(@PathVariable Long id) {
+        Proyeccion p = proyeccionService.obtenerPorId(id);
+        ProyeccionDTO dto = new ProyeccionDTO();
+
+        dto.setIdProyeccion(p.getIdProyeccion());
+        dto.setFecha(p.getFecha());
+        dto.setHorario(p.getHorario().toString());
+        dto.setPeliculaTitulo(p.getPelicula().getTitulo());
+        dto.setSala("Sala " + p.getSala().getNumero() + " - " + p.getSala().getDescripcion());
+
+        return ResponseEntity.ok(dto);
     }
 
     // ===================== ACTUALIZAR PROYECCIÓN =========================

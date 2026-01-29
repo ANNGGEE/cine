@@ -13,7 +13,7 @@ import java.util.List;
 public class Proyeccion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idproyeccion;
+    private Long idProyeccion;
 
     private LocalTime horario;
     private LocalDate fecha;
