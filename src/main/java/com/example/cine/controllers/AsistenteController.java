@@ -1,8 +1,7 @@
 package com.example.cine.controllers;
 
 import com.example.cine.entity.Asistente;
-import com.example.cine.services.AsistenteServices;
-import org.springframework.expression.spel.ast.Assign;
+import com.example.cine.services.AsistenteService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,15 +10,16 @@ import java.util.List;
 @RestController
 @RequestMapping("/asistentes")
 public class AsistenteController {
-    private final AsistenteServices asistenteService;
+    private final AsistenteService asistenteService;
 
-    public AsistenteController(AsistenteServices asistenteService) {
+    public AsistenteController(AsistenteService asistenteService) {
         this.asistenteService = asistenteService;
     }
 
     // ============== CREAR ASISTENTE ===============================
     @PostMapping("/crear")
     public ResponseEntity<Asistente> crearAsistente(@RequestBody Asistente asistente){
+        Asistente creado = asistenteService.crearAsistente(asistente);
         return ResponseEntity.ok(asistenteService.crearAsistente(asistente));
     }
 

@@ -7,16 +7,20 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class AsistenteServices {
+public class AsistenteService {
 
     private final AsistenteRepository asistenteRepository;
 
-    public AsistenteServices(AsistenteRepository asistenteRepository) {
+    public AsistenteService(AsistenteRepository asistenteRepository) {
         this.asistenteRepository = asistenteRepository;
     }
 
     // =================== CREAR ASISTENTE =====================
     public Asistente crearAsistente(Asistente asistente){
+        if (asistente.getNombre() == null || asistente.getNombre().isBlank()) {
+            throw new RuntimeException("El nombre del asistente es obligatorio");
+        }
+
         return asistenteRepository.save(asistente);
     }
 

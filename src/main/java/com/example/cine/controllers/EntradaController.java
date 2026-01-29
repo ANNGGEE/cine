@@ -51,7 +51,7 @@ public class EntradaController{
     }
 
     // ================== CANCELAR ENTRADA ============================
-    @PutMapping("/cancelar/{idEntrada}")
+    @PutMapping("/cancelar/{id_entrada}")
     public ResponseEntity<Entrada> cancelarEntrada(@PathVariable Long id_entrada){
         return ResponseEntity.ok(
                 entradaService.cancelarEntrada(id_entrada)
