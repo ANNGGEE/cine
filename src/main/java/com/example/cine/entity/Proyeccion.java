@@ -1,5 +1,6 @@
 package com.example.cine.entity;
 
+import ch.qos.logback.core.pattern.util.AlmostAsIsEscapeUtil;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -27,4 +28,7 @@ public class Proyeccion {
 
     @OneToMany(mappedBy = "proyeccion", cascade = CascadeType.ALL)
     private List<Entrada> entradas;
+
+    @ManyToMany(mappedBy = "proyecciones")
+    private List<Asistente> asistentes;
 }
