@@ -1,4 +1,4 @@
 package com.example.cine.dto;
 
-public class AsientoDTO {
+public class ButacaDTO {
 }
