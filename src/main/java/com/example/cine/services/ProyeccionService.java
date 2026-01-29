@@ -71,9 +71,8 @@ public class ProyeccionService{
         return proyeccionRepository.findBySala(sala);
     }
 
-    public List<Proyeccion> obtenerPorFecha(LocalDate fecha) {
-
-        return proyeccionRepository.findByFecha(fecha);
+    public Page<Proyeccion> obtenerPorFecha(LocalDate fecha, Pageable pageable) {
+        return proyeccionRepository.findByFecha(fecha, pageable);
     }
 
     public long ocupacionProyeccion(Long idProyeccion){

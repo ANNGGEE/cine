@@ -74,11 +74,12 @@ public class ProyeccionController {
     }
 
     // =========================== OBTENEMOS PROYECCIONES POR FECHA ===============================
-    @GetMapping("/fecha")
-    public ResponseEntity<List<Proyeccion>> proyeccionesPorFecha(@RequestParam LocalDate fecha) {
-        return ResponseEntity.ok(
-                proyeccionService.obtenerPorFecha(fecha)
-        );
+    @GetMapping("/fecha/paginado")
+    public Page<Proyeccion> proyeccionesPorFechaPaginado(
+            @RequestParam LocalDate fecha,
+            Pageable pageable
+    ) {
+        return proyeccionService.obtenerPorFecha(fecha, pageable);
     }
 
     // ===================== OCUPACIÓN DE UNA PROYECCIÓN ===========================================
