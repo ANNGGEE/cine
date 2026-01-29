@@ -1,5 +1,6 @@
 package com.example.cine.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -29,11 +30,16 @@ public class Entrada{
     @JoinColumn(name = "idProyeccion", nullable = false)
     private Proyeccion proyeccion;
 
-    @ManyToOne
-    @JoinColumn(name = "idButaca", nullable = false)
-    private Butaca butaca;
+    // @ManyToOne
+    // @JoinColumn(name = "idButaca", nullable = false)
+    // private Butaca butaca;
 
     @ManyToOne
     @JoinColumn(name = "idAsistente", nullable = false)
     private Asistente asistente;
+
+    @OneToOne
+    @JoinColumn(name = "idAsistente", unique = true)
+    @JsonIgnoreProperties("entrada")
+    private Butaca butaca;
 }

@@ -1,5 +1,6 @@
 package com.example.cine.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -23,4 +24,8 @@ public class Butaca{
 
     @OneToMany(mappedBy = "butaca")
     private List<Entrada> entradas;
+
+    @OneToOne(mappedBy = "butaca")
+    @JsonIgnoreProperties("butaca")
+    private Entrada entrada;
 }
