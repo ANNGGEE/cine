@@ -7,8 +7,9 @@ import com.example.cine.repositories.EntradaRepository;
 import com.example.cine.repositories.PeliculaRepository;
 import com.example.cine.repositories.ProyeccionRepository;
 import com.example.cine.repositories.SalaRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -38,6 +39,11 @@ public class ProyeccionService{
         proyeccion.setSala(sala);
 
         return proyeccionRepository.save(proyeccion);
+    }
+
+    // =================== OBTENER PAGINADO ========================
+    public Page<Proyeccion> obtenerPaginado(Pageable pageable){
+        return proyeccionRepository.findAll(pageable);
     }
 
     // =========================== OBTENEMOS TODAS LAS PROYECCIONES =====================================

@@ -4,9 +4,10 @@ package com.example.cine.controllers;
 import com.example.cine.entity.Proyeccion;
 import com.example.cine.services.EntradaService;
 import com.example.cine.services.ProyeccionService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -25,6 +26,12 @@ public class ProyeccionController {
     @PostMapping("/crear")
     public ResponseEntity<Proyeccion> crearProyeccion(@RequestBody Proyeccion proyeccion, @RequestParam Long idPelicula, @RequestParam Long idSala){
         return ResponseEntity.ok(proyeccionService.crearProyeccion(proyeccion, idPelicula, idSala));
+    }
+
+    // =============== OBTENER PAGINADO =======================
+    @GetMapping("/paginado")
+    public Page<Proyeccion> listarPaginado(Pageable pageable){
+        return proyeccionService.obtenerPaginado(pageable);
     }
 
     // ================= OBTENEMOS TODAS LAS PROYECCIONES ==================================

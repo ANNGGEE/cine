@@ -62,12 +62,6 @@ public class EntradaService{
             throw new RuntimeException("La butaca ya está ocupada en esta proyección");
         }
 
-        // Verificamos que la butaca esté libre para la proyección
-        List<Entrada> entradasExistentes = entradaRepository.findByProyeccionAndButaca(proyeccion, butaca);
-        if(!entradasExistentes.isEmpty()){
-            throw new RuntimeException("Butaca ya ocupada en esta proyección");
-        }
-
         // Control de aforo máximo de la sala
         Sala sala = proyeccion.getSala();
         long entradasVendidas = entradaRepository.findByProyeccion(proyeccion).size();
