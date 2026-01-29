@@ -27,13 +27,13 @@ public class ButacaController {
         );
     }
 
-    // ================= OBTENER TODAS =================
+    // ======================= OBTENER TODAS =================
     @GetMapping
     public ResponseEntity<List<Butaca>> obtenerTodas() {
         return ResponseEntity.ok(butacaService.obtenerTodas());
     }
 
-    // ================= OBTENER POR ID =================
+    // ================== OBTENER POR ID =================
     @GetMapping("/{id}")
     public ResponseEntity<Butaca> obtenerPorId(@PathVariable Long id) {
         return ResponseEntity.ok(butacaService.obtenerPorId(id));
