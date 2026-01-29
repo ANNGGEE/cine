@@ -40,7 +40,7 @@ public class ButacaController {
     }
 
     // ================= OBTENER POR SALA =================
-    @GetMapping("/sala/{idSala}")
+    @GetMapping("/sala/{id_sala}")
     public ResponseEntity<List<Butaca>> obtenerPorSala(@PathVariable Long idSala) {
         return ResponseEntity.ok(
                 butacaService.obtenerPorSala(idSala)

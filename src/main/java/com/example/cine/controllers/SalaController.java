@@ -16,9 +16,9 @@ public class SalaController {
         this.salaService = salaService;
     }
 
-    // ================= CREAR SALA =================
+    // ================ CREAR SALA ==========================
     @PostMapping
-    public ResponseEntity<Sala> crear(@RequestBody Sala sala) {
+    public ResponseEntity<Sala> crearSala(@RequestBody Sala sala){
         return ResponseEntity.ok(salaService.crearSala(sala));
     }
 
@@ -32,12 +32,6 @@ public class SalaController {
     @GetMapping("/{id}")
     public ResponseEntity<Sala> obtenerSala(@PathVariable Long id){
         return ResponseEntity.ok(salaService.obtenerPorId(id));
-    }
-
-    // ================ CREAR SALA ==========================
-    @PostMapping
-    public ResponseEntity<Sala> crearSala(@RequestBody Sala sala){
-        return ResponseEntity.ok(salaService.crearSala(sala));
     }
 
     // ================= ELIMINAR =================
