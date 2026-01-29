@@ -14,6 +14,17 @@ public class SalaService {
         this.salaRepository = salaRepository;
     }
 
+    // ================= CREAR SALA =================
+    public Sala crearSala(Sala sala) {
+        if (sala.getNombre() == null || sala.getNombre().isBlank()) {
+            throw new RuntimeException("El nombre de la sala es obligatorio");
+        }
+        if (sala.getNumButaca() <= 0) {
+            throw new RuntimeException("La sala debe tener al menos 1 butaca");
+        }
+        return salaRepository.save(sala);
+    }
+
     // ================== OBTENER TODAS LAS SALAS ========================
     public List<Sala> obtenerTodas(){
         return salaRepository.findAll();
@@ -25,8 +36,9 @@ public class SalaService {
                 .orElseThrow(() -> new RuntimeException("Sala no encontrada"));
     }
 
-    // ================= CREAR SALA ====================
-    public Sala crearSala(Sala sala){
-        return salaRepository.save(sala);
+    // ================= ELIMINAR =================
+    public void eliminar(Long id) {
+        Sala sala = obtenerPorId(id);
+        salaRepository.delete(sala);
     }
 }

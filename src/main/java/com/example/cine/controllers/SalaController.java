@@ -16,6 +16,12 @@ public class SalaController {
         this.salaService = salaService;
     }
 
+    // ================= CREAR SALA =================
+    @PostMapping
+    public ResponseEntity<Sala> crear(@RequestBody Sala sala) {
+        return ResponseEntity.ok(salaService.crearSala(sala));
+    }
+
     // ================= LISTAR TODAS LAS SALAS ============
     @GetMapping
     public ResponseEntity<List<Sala>> listarSalas(){
@@ -32,5 +38,12 @@ public class SalaController {
     @PostMapping
     public ResponseEntity<Sala> crearSala(@RequestBody Sala sala){
         return ResponseEntity.ok(salaService.crearSala(sala));
+    }
+
+    // ================= ELIMINAR =================
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
+        salaService.eliminar(id);
+        return ResponseEntity.noContent().build();
     }
 }
