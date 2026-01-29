@@ -28,6 +28,10 @@ public class PeliculaService {
 
     // ================= CREAR PELICULA ========================
     public Pelicula crearPelicula(Pelicula pelicula){
+        if (pelicula.getTitulo() == null || pelicula.getTitulo().isBlank()) {
+            throw new RuntimeException("El título es obligatorio");
+        }
+
         return peliculaRepository.save(pelicula);
     }
 
