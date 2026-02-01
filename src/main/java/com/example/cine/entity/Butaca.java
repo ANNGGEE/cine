@@ -24,8 +24,4 @@ public class Butaca{
 
     @OneToMany(mappedBy = "butaca")
     private List<Entrada> entradas;
-
-    @OneToOne(mappedBy = "butaca")
-    @JsonIgnoreProperties("butaca")
-    private Entrada entrada;
 }

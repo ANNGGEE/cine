@@ -38,8 +38,8 @@ public class Entrada{
     @JoinColumn(name = "idAsistente", nullable = false)
     private Asistente asistente;
 
-    @OneToOne
-    @JoinColumn(name = "idAsistente", unique = true)
+    @ManyToOne
+    @JoinColumn(name = "idButaca", nullable = false)
     @JsonIgnoreProperties("entrada")
     private Butaca butaca;
 }
