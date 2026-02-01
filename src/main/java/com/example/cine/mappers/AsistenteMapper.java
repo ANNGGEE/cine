@@ -7,7 +7,7 @@ public class AsistenteMapper {
 
     public static AsistenteDTO toDTO(Asistente asistente) {
         AsistenteDTO dto = new AsistenteDTO();
-        dto.setId(asistente.getId_asistente());
+        dto.setIdAsistente(asistente.getIdAsistente());
         dto.setNombre(asistente.getNombre());
         dto.setTotalEntradas(
                 asistente.getEntradas() == null ? 0 : asistente.getEntradas().size()

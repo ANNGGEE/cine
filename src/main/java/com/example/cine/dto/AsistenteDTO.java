@@ -6,4 +6,5 @@ import lombok.Data;
 public class AsistenteDTO {
     private Long idAsistente;
     private String nombre;
+    private Integer totalEntradas;
 }
