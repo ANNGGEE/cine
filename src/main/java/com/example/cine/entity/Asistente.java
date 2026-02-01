@@ -1,7 +1,9 @@
 package com.example.cine.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 
 import java.util.List;
 
@@ -15,6 +17,8 @@ public class Asistente {
     private String nombre;
 
     @OneToMany(mappedBy = "asistente")
+    @ToString.Exclude  // Evitamos LazyInitializationException al imprimir
+    @JsonIgnoreProperties("asistente") // Evitamos ciclos en JSON
     private List<Entrada> entradas;
 
     @ManyToMany
@@ -23,5 +27,7 @@ public class Asistente {
             joinColumns = @JoinColumn(name = "idAsistente"),
             inverseJoinColumns = @JoinColumn(name = "idProyeccion")
     )
+    @ToString.Exclude
+    @JsonIgnoreProperties("asistentes")
     private List<Proyeccion> proyecciones;
 }

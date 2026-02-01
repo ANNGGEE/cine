@@ -3,6 +3,7 @@ package com.example.cine.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 
 import java.util.List;
 
@@ -20,9 +21,12 @@ public class Butaca{
 
     @ManyToOne
     @JoinColumn(name = "idSala", nullable = false)
+    @JsonIgnoreProperties("butacas") // Evitamos ciclos
     private Sala sala;
 
     @OneToMany(mappedBy = "butaca")
+    @ToString.Exclude
+    @JsonIgnoreProperties("butaca")
     private List<Entrada> entradas;
 }
 // Preguntar por la relación directa del ManyToMany y el OnetoOne
