@@ -25,3 +25,4 @@ public class Butaca{
     @OneToMany(mappedBy = "butaca")
     private List<Entrada> entradas;
 }
+// Preguntar por la relación directa del ManyToMany y el OnetoOne
