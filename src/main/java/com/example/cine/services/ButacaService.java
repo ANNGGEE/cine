@@ -36,7 +36,7 @@ public class ButacaService {
     // =================== OBTENEMOS LAS BUTACAS POR ID ===========
     public Butaca obtenerPorId(Long id){
         return butacaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Butaca no encontrada"));
+                .orElseThrow(() -> new RuntimeException("No existe ninguna butaca con ID \" + idButaca"));
     }
 
     // ================ OBTENEMOS POR SALA ===================

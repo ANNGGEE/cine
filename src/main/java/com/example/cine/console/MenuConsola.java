@@ -73,10 +73,30 @@ public class MenuConsola implements CommandLineRunner {
                 case 4 -> {
                     System.out.print("ID asistente: ");
                     Long idAsistente = sc.nextLong();
+
                     System.out.print("ID proyección: ");
                     Long idProyeccion = sc.nextLong();
-                    System.out.print("ID butaca: ");
+
+                    // 👉 AQUÍ: mostramos las butacas disponibles
+                    var butacasLibres = entradaService.asientosLibres(idProyeccion);
+
+                    if (butacasLibres.isEmpty()) {
+                        System.out.println("❌ No hay butacas disponibles para esta proyección");
+                        break;
+                    }
+
+                    System.out.println("🎟️ Butacas disponibles:");
+                    butacasLibres.forEach(b ->
+                            System.out.println(
+                                    "ID: " + b.getIdButaca() +
+                                            " | Fila: " + b.getFila() +
+                                            " | Número: " + b.getNumero()
+                            )
+                    );
+
+                    System.out.print("Elige ID butaca: ");
                     Long idButaca = sc.nextLong();
+
                     System.out.print("Precio: ");
                     Double precio = sc.nextDouble();
 
@@ -87,7 +107,7 @@ public class MenuConsola implements CommandLineRunner {
                             precio
                     );
 
-                    System.out.println("Entrada comprada");
+                    System.out.println("✅ Entrada comprada");
                 }
 
                 case 5 -> {
