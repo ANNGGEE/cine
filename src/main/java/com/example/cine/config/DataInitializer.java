@@ -138,3 +138,4 @@ public class DataInitializer implements CommandLineRunner {
         System.out.println("✅ Datos iniciales cargados: salas, películas y proyecciones");
     }
 }
+
