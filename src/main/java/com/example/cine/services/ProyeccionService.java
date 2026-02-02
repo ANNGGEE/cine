@@ -48,7 +48,7 @@ public class ProyeccionService{
 
     // =========================== OBTENEMOS TODAS LAS PROYECCIONES =====================================
     public List<Proyeccion> obtenerTodas(){
-        return proyeccionRepository.findAll();
+        return proyeccionRepository.findAllWithSalaAndPelicula();
     }
 
     // ========================== OBTENER POR ID ============================

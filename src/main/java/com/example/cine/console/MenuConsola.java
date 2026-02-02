@@ -58,11 +58,17 @@ public class MenuConsola implements CommandLineRunner {
                     System.out.println("✅ Asistente creado");
                 }
 
-                    case 2 -> asistenteService.obtenerTodos()
+                case 2 -> asistenteService.obtenerTodos()
                         .forEach(System.out::println);
 
                 case 3 -> proyeccionService.obtenerTodas()
-                        .forEach(System.out::println);
+                        .forEach(p -> System.out.println(
+                                "ID: " + p.getIdProyeccion() +
+                                        ", Fecha: " + p.getFecha() +
+                                        ", Horario: " + p.getHorario() +
+                                        ", Sala: " + p.getSala().getNumero() +
+                                        ", Pelicula: " + p.getPelicula().getTitulo()
+                        ));
 
                 case 4 -> {
                     System.out.print("ID asistente: ");

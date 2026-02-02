@@ -27,5 +27,3 @@ public class Sala {
     @ToString.Exclude
     private List<Butaca> butacas;
 }
-// @Query("SELECT s FROM Sala s JOIN FETCH s.proyecciones WHERE s.id = :id")
-//Sala findByIdWithProyecciones(@Param("id") Long id);
