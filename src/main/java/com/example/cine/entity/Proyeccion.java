@@ -3,6 +3,7 @@ package com.example.cine.entity;
 import ch.qos.logback.core.pattern.util.AlmostAsIsEscapeUtil;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -20,6 +21,7 @@ public class Proyeccion {
 
     @ManyToOne
     @JoinColumn(name = "idSala", nullable = false)
+    @ToString.Exclude
     private Sala sala;
 
     @ManyToOne
@@ -27,8 +29,10 @@ public class Proyeccion {
     private Pelicula pelicula;
 
     @OneToMany(mappedBy = "proyeccion", cascade = CascadeType.ALL)
+    @ToString.Exclude
     private List<Entrada> entradas;
 
     @ManyToMany(mappedBy = "proyecciones")
+    @ToString.Exclude
     private List<Asistente> asistentes;
 }
