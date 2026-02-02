@@ -19,6 +19,13 @@ public class Proyeccion {
     private LocalTime horario;
     private LocalDate fecha;
 
+    public Proyeccion() {}
+
+    public Proyeccion(LocalDate fecha, LocalTime horario) {
+        this.fecha = fecha;
+        this.horario = horario;
+    }
+
     @ManyToOne
     @JoinColumn(name = "idSala", nullable = false)
     @ToString.Exclude
@@ -35,4 +42,60 @@ public class Proyeccion {
     @ManyToMany(mappedBy = "proyecciones")
     @ToString.Exclude
     private List<Asistente> asistentes;
+
+    public Long getIdProyeccion() {
+        return idProyeccion;
+    }
+
+    public void setIdProyeccion(Long idProyeccion) {
+        this.idProyeccion = idProyeccion;
+    }
+
+    public LocalTime getHorario() {
+        return horario;
+    }
+
+    public void setHorario(LocalTime horario) {
+        this.horario = horario;
+    }
+
+    public Pelicula getPelicula() {
+        return pelicula;
+    }
+
+    public void setPelicula(Pelicula pelicula) {
+        this.pelicula = pelicula;
+    }
+
+    public List<Entrada> getEntradas() {
+        return entradas;
+    }
+
+    public void setEntradas(List<Entrada> entradas) {
+        this.entradas = entradas;
+    }
+
+    public List<Asistente> getAsistentes() {
+        return asistentes;
+    }
+
+    public void setAsistentes(List<Asistente> asistentes) {
+        this.asistentes = asistentes;
+    }
+
+    public LocalDate getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(LocalDate fecha) {
+        this.fecha = fecha;
+    }
+
+    public Sala getSala() {
+        return sala;
+    }
+
+    public void setSala(Sala sala) {
+        this.sala = sala;
+    }
 }

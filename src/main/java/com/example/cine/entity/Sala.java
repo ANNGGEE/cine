@@ -7,18 +7,25 @@ import org.springframework.security.core.parameters.P;
 
 import java.util.List;
 
-@Data
 @Entity
 public class Sala {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idSala;
 
-    @Column(nullable = true)
-    private Integer numero;
+    private int numero;
     private String descripcion;
-    private Integer capacidad;
-    // private int numButaca;
+    private int capacidad;
+
+    // Constructor vacío obligatorio para JPA/Hibernate
+    public Sala() {}
+
+    // Constructor con parámetros (para tu DataInitializer)
+    public Sala(int numero, String descripcion, int capacidad) {
+        this.numero = numero;
+        this.descripcion = descripcion;
+        this.capacidad = capacidad;
+    }
 
     @OneToMany(mappedBy = "sala", cascade = CascadeType.ALL)
     @ToString.Exclude
@@ -27,4 +34,52 @@ public class Sala {
     @OneToMany(mappedBy = "sala", cascade = CascadeType.ALL)
     @ToString.Exclude
     private List<Butaca> butacas;
+
+    public Long getIdSala() {
+        return idSala;
+    }
+
+    public void setIdSala(Long idSala) {
+        this.idSala = idSala;
+    }
+
+    public int getNumero() {
+        return numero;
+    }
+
+    public void setNumero(int numero) {
+        this.numero = numero;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public int getCapacidad() {
+        return capacidad;
+    }
+
+    public void setCapacidad(int capacidad) {
+        this.capacidad = capacidad;
+    }
+
+    public List<Proyeccion> getProyecciones() {
+        return proyecciones;
+    }
+
+    public void setProyecciones(List<Proyeccion> proyecciones) {
+        this.proyecciones = proyecciones;
+    }
+
+    public List<Butaca> getButacas() {
+        return butacas;
+    }
+
+    public void setButacas(List<Butaca> butacas) {
+        this.butacas = butacas;
+    }
 }
