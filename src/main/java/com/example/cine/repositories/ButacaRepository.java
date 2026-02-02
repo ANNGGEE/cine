@@ -14,5 +14,5 @@ import java.util.List;
 @Repository
 public interface ButacaRepository extends JpaRepository<Butaca, Long>{
     List<Butaca> findBySala(Sala sala);
-    List<Butaca> findBySalaId(Long idSala);
+    List<Butaca> findBySala_IdSala(Long idSala);
 }

@@ -80,15 +80,14 @@ public class EntradaService {
     // =================== COMPRA AUTOMÁTICA (PRIMER ASIENTO LIBRE) =========
     @Transactional
     public Entrada comprarEntradaAutomatica(Long idAsistente, Long idProyeccion, Double precio) {
-        // Obtener proyección y asistente
         Proyeccion proyeccion = proyeccionRepository.findById(idProyeccion)
                 .orElseThrow(() -> new RuntimeException("Proyección no encontrada"));
 
         Asistente asistente = asistenteRepository.findById(idAsistente)
                 .orElseThrow(() -> new RuntimeException("Asistente no encontrado"));
 
-        // Todas las butacas de la sala
-        List<Butaca> todasButacas = butacaRepository.findBySalaId(proyeccion.getSala().getIdSala());
+        // Todas las butacas de la sala usando el idSala correcto
+        List<Butaca> todasButacas = butacaRepository.findBySala_IdSala(proyeccion.getSala().getIdSala());
 
         // Entradas ya vendidas
         List<Entrada> entradasVendidas = entradaRepository.findByProyeccion(proyeccion);
@@ -102,7 +101,6 @@ public class EntradaService {
         if (butacaLibre.isEmpty())
             throw new RuntimeException("No hay butacas disponibles");
 
-        // Crear y guardar la entrada
         Entrada entrada = new Entrada();
         entrada.setAsistente(asistente);
         entrada.setProyeccion(proyeccion);
@@ -121,7 +119,7 @@ public class EntradaService {
         Proyeccion proyeccion = proyeccionRepository.findById(idProyeccion)
                 .orElseThrow(() -> new RuntimeException("Proyección no encontrada"));
 
-        List<Butaca> todasButacas = butacaRepository.findBySalaId(proyeccion.getSala().getIdSala());
+        List<Butaca> todasButacas = butacaRepository.findBySala_IdSala(proyeccion.getSala().getIdSala());
         List<Entrada> entradasVendidas = entradaRepository.findByProyeccion(proyeccion);
 
         return todasButacas.stream()
