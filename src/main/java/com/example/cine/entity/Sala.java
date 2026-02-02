@@ -17,7 +17,7 @@ public class Sala {
     private int numero;
     private String descripcion;
     private int capacidad;
-    private int numButaca;
+    // private int numButaca;
 
     @OneToMany(mappedBy = "sala", cascade = CascadeType.ALL)
     @ToString.Exclude
