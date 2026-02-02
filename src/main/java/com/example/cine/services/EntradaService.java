@@ -26,6 +26,8 @@ public class EntradaService{
 
     // =================================== COMPRA DE ENTRADA =============================================
     public Entrada comprarEntrada(Long idAsistente, Long idProyeccion, Long idButaca, Double precio) {
+        if(precio <= 0) throw new RuntimeException("Precio inválido");
+
         Asistente asistente = asistenteRepository.findById(idAsistente)
                 .orElseThrow(() -> new RuntimeException("Asistente no encontrado"));
 
@@ -35,41 +37,28 @@ public class EntradaService{
         Butaca butaca = butacaRepository.findById(idButaca)
                 .orElseThrow(() -> new RuntimeException("Butaca no encontrada"));
 
-        // No se pueden comprar entradas de proyecciones pasadas
-        LocalDateTime fechaHoraProyeccion =
-                LocalDateTime.of(proyeccion.getFecha(), proyeccion.getHorario());
-
-        if(fechaHoraProyeccion.isBefore(LocalDateTime.now())){
+        LocalDateTime fechaHora = LocalDateTime.of(proyeccion.getFecha(), proyeccion.getHorario());
+        if(fechaHora.isBefore(LocalDateTime.now())){
             throw new RuntimeException("No se pueden comprar entradas para la proyección");
         }
 
-        // La butaca tiene que pertenecer a la sala de la proyección
-        if (!butaca.getSala().getIdSala().equals(proyeccion.getSala().getIdSala())) {
+        if(!butaca.getSala().getIdSala().equals(proyeccion.getSala().getIdSala())){
             throw new RuntimeException("La butaca no pertenece a la sala de esta proyección");
         }
 
-        // Verificamos que el asistente no supere las 5 entradas
-        long entradasAsistente = entradaRepository
-                .findByAsistenteAndCanceladaFalse(asistente)
-                .size();
-
+        long entradasAsistente = entradaRepository.countByAsistenteAndCanceladaFalse(asistente);
         if(entradasAsistente >= 5){
             throw new RuntimeException("El asistente ya tiene 5 entradas");
         }
 
-        // ======================= BUTACA OCUPADA EN ESA PROYECCIÓN ==========================
         if(entradaRepository.existsByProyeccionAndButacaAndCanceladaFalse(proyeccion, butaca)){
             throw new RuntimeException("La butaca ya está ocupada en esta proyección");
         }
 
-        // Control de aforo máximo de la sala
-        Sala sala = proyeccion.getSala();
-        long entradasVendidas = entradaRepository.findByProyeccion(proyeccion).size();
-        if(entradasVendidas >= sala.getCapacidad()){
+        if(entradaRepository.countByProyeccionAndCanceladaFalse(proyeccion) >= proyeccion.getSala().getCapacidad()){
             throw new RuntimeException("Aforo completo, no se pueden vender más entradas");
         }
 
-        // Creamos la entrada
         Entrada entrada = new Entrada();
         entrada.setAsistente(asistente);
         entrada.setProyeccion(proyeccion);
@@ -79,6 +68,14 @@ public class EntradaService{
         return entradaRepository.save(entrada);
     }
 
+    // =================== COMPRA AUTOMÁTICA (PRIMER ASIENTO LIBRE) =========
+    public Entrada comprarEntradaAutomatica(Long idAsistente, Long idProyeccion, Double precio) {
+        List<Butaca> libres = asientosLibres(idProyeccion);
+        if(libres.isEmpty()) throw new RuntimeException("No quedan butacas disponibles");
+        Butaca butaca = libres.get(0);
+        return comprarEntrada(idAsistente, idProyeccion, butaca.getIdButaca(), precio);
+    }
+
     // ================================ ASIENTOS LIBRES ==============================
     // Obtenemos los asientos libres de una sala para una proyección
     @Transactional(readOnly = true)
@@ -86,10 +83,7 @@ public class EntradaService{
         Proyeccion proyeccion = proyeccionRepository.findById(idProyeccion)
                 .orElseThrow(() -> new RuntimeException("Proyección no encontrada"));
 
-        // Para simplificar, seleccionamos la primera sala de la proyección
-        Sala sala = proyeccion.getSala();
-
-        List<Butaca> todasButacas = sala.getButacas();
+        List<Butaca> todasButacas = proyeccion.getSala().getButacas();
         List<Entrada> entradasVendidas = entradaRepository.findByProyeccion(proyeccion);
 
         return todasButacas.stream()

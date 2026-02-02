@@ -46,7 +46,7 @@ public class SalaService {
                 b.setSala(salaGuardada);
                 b.setFila(String.valueOf(filaLetra));
                 b.setNumero(n);
-                b.setPosicion(filaLetra + String.valueOf(n)); // <-- CORREGIDO
+                b.setPosicion(filaLetra + String.valueOf(n));
 
                 listaButacas.add(b);
                 creadas++;

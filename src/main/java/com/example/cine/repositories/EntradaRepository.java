@@ -22,4 +22,5 @@ public interface EntradaRepository extends JpaRepository<Entrada, Long>{
     );
 
     long countByProyeccionAndCanceladaFalse(Proyeccion proyeccion);
+    long countByAsistenteAndCanceladaFalse(Asistente asistente);
 }

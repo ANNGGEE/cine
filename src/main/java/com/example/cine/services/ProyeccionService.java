@@ -64,7 +64,7 @@ public class ProyeccionService{
         return proyeccionRepository.findByPelicula(pelicula);
     }
 
-    // ================== LISTAR POR PELICULA ===========================
+    // ================== LISTAR POR SALA ===========================
     public List<Proyeccion> obtenerPorSala(Long idSala){
         Sala sala = salaRepository.findById(idSala)
                 .orElseThrow(() -> new RuntimeException("Sala no encontrada"));
@@ -88,9 +88,18 @@ public class ProyeccionService{
     // =================== ACTUALIZAR PROYECCIÓN ======================
     public Proyeccion actualizarProyeccion(Long id, Proyeccion proyeccionActualizada){
         Proyeccion proyeccion = obtenerPorId(id);
+
         proyeccion.setHorario(proyeccionActualizada.getHorario());
         proyeccion.setFecha(proyeccionActualizada.getFecha());
-        // Actualizamos la sala o película si es necesario
+
+        if(proyeccionActualizada.getSala() != null){
+            proyeccion.setSala(proyeccionActualizada.getSala());
+        }
+
+        if(proyeccionActualizada.getPelicula() != null){
+            proyeccion.setPelicula(proyeccionActualizada.getPelicula());
+        }
+
         return proyeccionRepository.save(proyeccion);
     }
 
