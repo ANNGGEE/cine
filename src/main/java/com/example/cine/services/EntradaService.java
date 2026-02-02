@@ -83,12 +83,16 @@ public class EntradaService{
         Proyeccion proyeccion = proyeccionRepository.findById(idProyeccion)
                 .orElseThrow(() -> new RuntimeException("Proyección no encontrada"));
 
-        List<Butaca> todasButacas = proyeccion.getSala().getButacas();
+        // Obtenemos todas las butacas de la sala directamente desde el repositorio
+        List<Butaca> todasButacas = butacaRepository.findBySalaId(proyeccion.getSala().getIdSala());
+
+        // Obtenemos las entradas vendidas de la proyección
         List<Entrada> entradasVendidas = entradaRepository.findByProyeccion(proyeccion);
 
+        // Filtramos las butacas que aún no están ocupadas
         return todasButacas.stream()
                 .filter(b -> entradasVendidas.stream()
-                        .noneMatch(e -> e.getButaca().equals(b) && !e.getCancelada()))
+                        .noneMatch(e -> e.getButaca().getIdButaca().equals(b.getIdButaca()) && !e.getCancelada()))
                 .toList();
     }
 
