@@ -14,9 +14,10 @@ public class Sala {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idSala;
 
-    private int numero;
+    @Column(nullable = true)
+    private Integer numero;
     private String descripcion;
-    private int capacidad;
+    private Integer capacidad;
     // private int numButaca;
 
     @OneToMany(mappedBy = "sala", cascade = CascadeType.ALL)
