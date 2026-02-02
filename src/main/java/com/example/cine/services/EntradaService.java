@@ -7,17 +7,19 @@ import com.example.cine.repositories.EntradaRepository;
 import com.example.cine.repositories.ProyeccionRepository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
-public class EntradaService{
+public class EntradaService {
     private final EntradaRepository entradaRepository;
     private final ProyeccionRepository proyeccionRepository;
     private final ButacaRepository butacaRepository;
     private final AsistenteRepository asistenteRepository;
 
-    public EntradaService(EntradaRepository entradaRepository, ProyeccionRepository proyeccionRepository, ButacaRepository butacaRepository, AsistenteRepository asistenteRepository){
+    public EntradaService(EntradaRepository entradaRepository, ProyeccionRepository proyeccionRepository, ButacaRepository butacaRepository, AsistenteRepository asistenteRepository) {
         this.entradaRepository = entradaRepository;
         this.proyeccionRepository = proyeccionRepository;
         this.butacaRepository = butacaRepository;
@@ -68,28 +70,60 @@ public class EntradaService{
         return entradaRepository.save(entrada);
     }
 
+    // Ver entradas por asistente
+    public List<Entrada> verEntradasPorAsistente(Long idAsistente) {
+        Asistente asistente = asistenteRepository.findById(idAsistente)
+                .orElseThrow(() -> new RuntimeException("Asistente no encontrado"));
+        return entradaRepository.findByAsistente(asistente);
+    }
+
     // =================== COMPRA AUTOMÁTICA (PRIMER ASIENTO LIBRE) =========
+    @Transactional
     public Entrada comprarEntradaAutomatica(Long idAsistente, Long idProyeccion, Double precio) {
-        List<Butaca> libres = asientosLibres(idProyeccion);
-        if(libres.isEmpty()) throw new RuntimeException("No quedan butacas disponibles");
-        Butaca butaca = libres.get(0);
-        return comprarEntrada(idAsistente, idProyeccion, butaca.getIdButaca(), precio);
+        // Obtener proyección y asistente
+        Proyeccion proyeccion = proyeccionRepository.findById(idProyeccion)
+                .orElseThrow(() -> new RuntimeException("Proyección no encontrada"));
+
+        Asistente asistente = asistenteRepository.findById(idAsistente)
+                .orElseThrow(() -> new RuntimeException("Asistente no encontrado"));
+
+        // Todas las butacas de la sala
+        List<Butaca> todasButacas = butacaRepository.findBySalaId(proyeccion.getSala().getIdSala());
+
+        // Entradas ya vendidas
+        List<Entrada> entradasVendidas = entradaRepository.findByProyeccion(proyeccion);
+
+        // Buscar primera butaca libre
+        Optional<Butaca> butacaLibre = todasButacas.stream()
+                .filter(b -> entradasVendidas.stream()
+                        .noneMatch(e -> e.getButaca().getIdButaca().equals(b.getIdButaca()) && !e.getCancelada()))
+                .findFirst();
+
+        if (butacaLibre.isEmpty())
+            throw new RuntimeException("No hay butacas disponibles");
+
+        // Crear y guardar la entrada
+        Entrada entrada = new Entrada();
+        entrada.setAsistente(asistente);
+        entrada.setProyeccion(proyeccion);
+        entrada.setButaca(butacaLibre.get());
+        entrada.setPrecio(precio);
+        entrada.setFechacompra(LocalDateTime.now());
+        entrada.setCancelada(false);
+
+        return entradaRepository.save(entrada);
     }
 
     // ================================ ASIENTOS LIBRES ==============================
-    // Obtenemos los asientos libres de una sala para una proyección
+// Obtenemos los asientos libres de una sala para una proyección
     @Transactional(readOnly = true)
     public List<Butaca> asientosLibres(Long idProyeccion) {
         Proyeccion proyeccion = proyeccionRepository.findById(idProyeccion)
                 .orElseThrow(() -> new RuntimeException("Proyección no encontrada"));
 
-        // Obtenemos todas las butacas de la sala directamente desde el repositorio
         List<Butaca> todasButacas = butacaRepository.findBySalaId(proyeccion.getSala().getIdSala());
-
-        // Obtenemos las entradas vendidas de la proyección
         List<Entrada> entradasVendidas = entradaRepository.findByProyeccion(proyeccion);
 
-        // Filtramos las butacas que aún no están ocupadas
         return todasButacas.stream()
                 .filter(b -> entradasVendidas.stream()
                         .noneMatch(e -> e.getButaca().getIdButaca().equals(b.getIdButaca()) && !e.getCancelada()))
@@ -97,22 +131,19 @@ public class EntradaService{
     }
 
     // =========================== CANCELAR ENTRADA =================================
-    // Cancelamos la entrada
-    public Entrada cancelarEntrada(Long idEntrada){
+// Cancelamos la entrada
+    public Entrada cancelarEntrada(Long idEntrada) {
         Entrada entrada = entradaRepository.findById(idEntrada)
-                .orElseThrow(() ->  new RuntimeException("Entrada no encontrada"));
+                .orElseThrow(() -> new RuntimeException("Entrada no encontrada"));
 
-        if(entrada.getCancelada()){
+        if (entrada.getCancelada()) {
             throw new RuntimeException("Entrada ya cancelada");
         }
 
         LocalDateTime fechaHoraProyeccion =
-                LocalDateTime.of(
-                        entrada.getProyeccion().getFecha(),
-                        entrada.getProyeccion().getHorario()
-                );
+                LocalDateTime.of(entrada.getProyeccion().getFecha(), entrada.getProyeccion().getHorario());
 
-        if(fechaHoraProyeccion.minusHours(2).isBefore(LocalDateTime.now())){
+        if (fechaHoraProyeccion.minusHours(2).isBefore(LocalDateTime.now())) {
             throw new RuntimeException("No se puede cancelar la entrada con menos de dos horas");
         }
 
@@ -120,9 +151,9 @@ public class EntradaService{
         return entradaRepository.save(entrada);
     }
 
-    // =================== ENTRADAS POR CLIENTE ================================
+// =================== ENTRADAS POR CLIENTE ================================
 
-    public List<Entrada> entradasPorAsistente(Long idAsistente){
+    public List<Entrada> entradasPorAsistente(Long idAsistente) {
         Asistente asistente = asistenteRepository.findById(idAsistente)
                 .orElseThrow(() -> new RuntimeException("Asistente no encontrado"));
 
@@ -130,7 +161,7 @@ public class EntradaService{
     }
 
     // ===================== OCUPACIÓN PROYECCIÓN ======================================
-    public Long ocupacionProyeccion(Long idProyeccion){
+    public Long ocupacionProyeccion(Long idProyeccion) {
         Proyeccion proyeccion = proyeccionRepository.findById(idProyeccion)
                 .orElseThrow(() -> new RuntimeException("Proyección no encontrada, sorry"));
 

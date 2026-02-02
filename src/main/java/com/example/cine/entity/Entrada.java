@@ -20,7 +20,7 @@ public class Entrada{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idEntrada;
 
-    private LocalDateTime fecha_compra;
+    private LocalDateTime fechacompra;
 
     private Double precio;
 
