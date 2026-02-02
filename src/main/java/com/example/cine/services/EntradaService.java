@@ -5,8 +5,8 @@ import com.example.cine.repositories.AsistenteRepository;
 import com.example.cine.repositories.ButacaRepository;
 import com.example.cine.repositories.EntradaRepository;
 import com.example.cine.repositories.ProyeccionRepository;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -81,6 +81,7 @@ public class EntradaService{
 
     // ================================ ASIENTOS LIBRES ==============================
     // Obtenemos los asientos libres de una sala para una proyección
+    @Transactional(readOnly = true)
     public List<Butaca> asientosLibres(Long idProyeccion) {
         Proyeccion proyeccion = proyeccionRepository.findById(idProyeccion)
                 .orElseThrow(() -> new RuntimeException("Proyección no encontrada"));
