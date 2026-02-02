@@ -6,6 +6,7 @@ import com.example.cine.repositories.ButacaRepository;
 import com.example.cine.repositories.SalaRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -27,31 +28,35 @@ public class SalaService {
             throw new RuntimeException("La sala debe tener al menos 1 butaca");
         }
 
-        // Guardamos la sala
+        // Guardamos la sala primero
         Sala salaGuardada = salaRepository.save(sala);
 
         // Creamos las butacas según la capacidad
-        int total = sala.getCapacidad();
-        int columnas = 10;
-        int filas = (int) Math.ceil((double) total / columnas);
+        int totalButacas = sala.getCapacidad();
+        int columnas = 10; // máximo de columnas por fila
+        int filas = (int) Math.ceil((double) totalButacas / columnas);
 
+        List<Butaca> listaButacas = new ArrayList<>();
         char filaLetra = 'A';
         int creadas = 0;
 
-        for (int f = 0; f < filas && creadas < total; f++) {
-            for (int n = 1; n <= columnas && creadas < total; n++) {
-
+        for (int f = 0; f < filas && creadas < totalButacas; f++) {
+            for (int n = 1; n <= columnas && creadas < totalButacas; n++) {
                 Butaca b = new Butaca();
                 b.setSala(salaGuardada);
                 b.setFila(String.valueOf(filaLetra));
                 b.setNumero(n);
-                b.setPosicion(filaLetra + String.valueOf(n));
+                b.setPosicion(filaLetra + String.valueOf(n)); // <-- CORREGIDO
 
-                butacaRepository.save(b);
+                listaButacas.add(b);
                 creadas++;
             }
             filaLetra++;
         }
+
+        // Guardamos todas las butacas en un solo batch
+        butacaRepository.saveAll(listaButacas);
+
         return salaGuardada;
     }
 
