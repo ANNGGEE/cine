@@ -53,7 +53,7 @@ public class ProyeccionService{
 
     // ========================== OBTENER POR ID ============================
     public Proyeccion obtenerPorId(Long idProyeccion){
-        return proyeccionRepository.findById(idProyeccion)
+        return proyeccionRepository.findByIdWithSalaAndPelicula(idProyeccion)
                 .orElseThrow(() -> new RuntimeException("Proyección no encontrada"));
     }
 

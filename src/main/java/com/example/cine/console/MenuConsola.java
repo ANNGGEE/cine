@@ -77,7 +77,14 @@ public class MenuConsola implements CommandLineRunner {
                     System.out.print("ID proyección: ");
                     Long idProyeccion = sc.nextLong();
 
-                    // 👉 AQUÍ: mostramos las butacas disponibles
+                    var proyeccion = proyeccionService.obtenerPorId(idProyeccion);
+
+                    System.out.println("\n🎬 PROYECCIÓN SELECCIONADA");
+                    System.out.println("Película: " + proyeccion.getPelicula().getTitulo());
+                    System.out.println("Sala nº: " + proyeccion.getSala().getNumero());
+                    System.out.println("Fecha: " + proyeccion.getFecha());
+                    System.out.println("Hora: " + proyeccion.getHorario());
+
                     var butacasLibres = entradaService.asientosLibres(idProyeccion);
 
                     if (butacasLibres.isEmpty()) {
