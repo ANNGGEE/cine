@@ -41,25 +41,26 @@ public class DataInitializer implements CommandLineRunner {
         salaService.crearSala(sala2);
 
         Sala sala3 = new Sala();
-        sala2.setNumero(3);
-        sala2.setDescripcion("Sala 3");
-        sala2.setCapacidad(30);
-        sala2.setNumButaca(30);
+        sala3.setNumero(3);
+        sala3.setDescripcion("Sala 3");
+        sala3.setCapacidad(30);
+        sala3.setNumButaca(30);
         salaService.crearSala(sala3);
 
         Sala sala4 = new Sala();
-        sala2.setNumero(4);
-        sala2.setDescripcion("Sala 4");
-        sala2.setCapacidad(40);
-        sala2.setNumButaca(40);
+        sala4.setNumero(4);
+        sala4.setDescripcion("Sala 4");
+        sala4.setCapacidad(40);
+        sala4.setNumButaca(40);
         salaService.crearSala(sala4);
 
         Sala sala5 = new Sala();
-        sala2.setNumero(5);
-        sala2.setDescripcion("Sala 5");
-        sala2.setCapacidad(25);
-        sala2.setNumButaca(25);
+        sala5.setNumero(5);
+        sala5.setDescripcion("Sala 5");
+        sala5.setCapacidad(25);
+        sala5.setNumButaca(25);
         salaService.crearSala(sala5);
+
 
         // ================== PELICULAS ==================
         Pelicula p1 = new Pelicula();
