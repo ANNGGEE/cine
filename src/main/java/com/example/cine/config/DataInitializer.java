@@ -28,45 +28,30 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        // ================== SALAS ==================
-        Sala sala1 = new Sala(1, "Sala 1", 50);
-        Sala sala2 = new Sala(2, "Sala 2", 30);
-        Sala sala3 = new Sala(3, "Sala 3", 30);
-        Sala sala4 = new Sala(4, "Sala 4", 40);
-        Sala sala5 = new Sala(5, "Sala 5", 25);
+        // ================== CREAR SALAS + BUTACAS ==================
+        Sala sala1 = crearSalaConButacas(1, "Sala 1", 50);
+        Sala sala2 = crearSalaConButacas(2, "Sala 2", 30);
+        Sala sala3 = crearSalaConButacas(3, "Sala 3", 30);
+        Sala sala4 = crearSalaConButacas(4, "Sala 4", 40);
+        Sala sala5 = crearSalaConButacas(5, "Sala 5", 25);
 
-        // Crear butacas para cada sala
-        crearButacas(sala1);
-        crearButacas(sala2);
-        crearButacas(sala3);
-        crearButacas(sala4);
-        crearButacas(sala5);
-
-        // Guardar salas
+        // Guardar salas (y automáticamente sus butacas)
         sala1 = salaService.crearSala(sala1);
         sala2 = salaService.crearSala(sala2);
         sala3 = salaService.crearSala(sala3);
         sala4 = salaService.crearSala(sala4);
         sala5 = salaService.crearSala(sala5);
 
-        // ================== PELÍCULAS ==================
-        Pelicula p1 = new Pelicula("Matrix", 136, "Ciencia Ficción");
-        Pelicula p2 = new Pelicula("Titanic", 195, "Romance");
-        Pelicula p3 = new Pelicula("El Padrino", 175, "Crimen");
-        Pelicula p4 = new Pelicula("Killers", 145, "Acción");
-        Pelicula p5 = new Pelicula("Trolls", 180, "Musical");
-        Pelicula p6 = new Pelicula("Zootopia", 200, "Acción");
-        Pelicula p7 = new Pelicula("Mentes Criminales, The Film", 250, "Acción");
+        // ================== CREAR PELICULAS ==================
+        Pelicula p1 = peliculaService.crearPelicula(new Pelicula("Matrix", 136, "Ciencia Ficción"));
+        Pelicula p2 = peliculaService.crearPelicula(new Pelicula("Titanic", 195, "Romance"));
+        Pelicula p3 = peliculaService.crearPelicula(new Pelicula("El Padrino", 175, "Crimen"));
+        Pelicula p4 = peliculaService.crearPelicula(new Pelicula("Killers", 145, "Accion"));
+        Pelicula p5 = peliculaService.crearPelicula(new Pelicula("Trolls", 180, "Musical"));
+        Pelicula p6 = peliculaService.crearPelicula(new Pelicula("Zootopia", 200, "Accion"));
+        Pelicula p7 = peliculaService.crearPelicula(new Pelicula("Mentes Criminales, The Film", 250, "Accion"));
 
-        p1 = peliculaService.crearPelicula(p1);
-        p2 = peliculaService.crearPelicula(p2);
-        p3 = peliculaService.crearPelicula(p3);
-        p4 = peliculaService.crearPelicula(p4);
-        p5 = peliculaService.crearPelicula(p5);
-        p6 = peliculaService.crearPelicula(p6);
-        p7 = peliculaService.crearPelicula(p7);
-
-        // ================== PROYECCIONES ==================
+        // ================== CREAR PROYECCIONES ==================
         proyeccionService.crearProyeccion(new Proyeccion(LocalDate.now().plusDays(1), LocalTime.of(18, 0)), p1.getIdPelicula(), sala1.getIdSala());
         proyeccionService.crearProyeccion(new Proyeccion(LocalDate.now().plusDays(1), LocalTime.of(20, 30)), p2.getIdPelicula(), sala2.getIdSala());
         proyeccionService.crearProyeccion(new Proyeccion(LocalDate.now().plusDays(2), LocalTime.of(19, 0)), p3.getIdPelicula(), sala3.getIdSala());
@@ -77,15 +62,23 @@ public class DataInitializer implements CommandLineRunner {
         System.out.println("✅ Datos iniciales cargados correctamente: salas, butacas, películas y proyecciones");
     }
 
-    // ================== MÉTODO AUXILIAR ==================
-    private void crearButacas(Sala sala) {
+    /**
+     * Método helper para crear una sala y generar automáticamente sus butacas
+     */
+    private Sala crearSalaConButacas(int numero, String descripcion, int capacidad) {
+        Sala sala = new Sala(numero, descripcion, capacidad);
+
         List<Butaca> butacas = new ArrayList<>();
-        for (int i = 1; i <= sala.getCapacidad(); i++) {
-            Butaca butaca = new Butaca();
-            butaca.setNumero(i);
-            butaca.setSala(sala);
-            butacas.add(butaca);
+        for (int fila = 1; fila <= (capacidad / 10 + 1); fila++) {
+            for (int num = 1; num <= 10 && butacas.size() < capacidad; num++) {
+                Butaca b = new Butaca();
+                b.setFila(fila);
+                b.setNumero(num);
+                b.setSala(sala); // Importante para la relación bidireccional
+                butacas.add(b);
+            }
         }
         sala.setButacas(butacas);
+        return sala;
     }
 }

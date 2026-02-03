@@ -31,7 +31,7 @@ public class Sala {
     @ToString.Exclude
     private List<Proyeccion> proyecciones;
 
-    @OneToMany(mappedBy = "sala", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "sala", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     private List<Butaca> butacas;
 
