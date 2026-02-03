@@ -48,6 +48,12 @@ public class EntradaService {
         Butaca butaca = butacaRepository.findById(idButaca)
                 .orElseThrow(() -> new RuntimeException("Butaca no encontrada"));
 
+        // Combinar fecha y horario para comparar con ahora
+        LocalDateTime fechaHoraProyeccion = LocalDateTime.of(proyeccion.getFecha(), proyeccion.getHorario());
+        if (fechaHoraProyeccion.isBefore(LocalDateTime.now())) {
+            throw new RuntimeException("No se puede comprar entradas para proyecciones pasadas");
+        }
+
         // COMPROBACIÓN CLAVE
         boolean ocupada = entradaRepository
                 .existsByProyeccionAndButacaAndCanceladaFalse(proyeccion, butaca);
