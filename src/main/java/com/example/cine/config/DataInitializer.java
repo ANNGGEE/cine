@@ -62,9 +62,8 @@ public class DataInitializer implements CommandLineRunner {
         System.out.println("✅ Datos iniciales cargados correctamente: salas, butacas, películas y proyecciones");
     }
 
-    /**
-     * Método helper para crear una sala y generar automáticamente sus butacas
-     */
+
+    // Método helper para crear una sala y generar automáticamente sus butacas
     private Sala crearSalaConButacas(int numero, String descripcion, int capacidad) {
         Sala sala = new Sala(numero, descripcion, capacidad);
 
@@ -72,9 +71,11 @@ public class DataInitializer implements CommandLineRunner {
         for (int fila = 1; fila <= (capacidad / 10 + 1); fila++) {
             for (int num = 1; num <= 10 && butacas.size() < capacidad; num++) {
                 Butaca b = new Butaca();
-                b.setFila(fila);
+                char letraFila = (char) ('A' + fila - 1);
+                b.setFila(String.valueOf(letraFila)); // fila como letra
                 b.setNumero(num);
-                b.setSala(sala); // Importante para la relación bidireccional
+                b.setSala(sala);
+                b.setPosicion(letraFila + String.valueOf(num)); // "A1", "A2", etc.
                 butacas.add(b);
             }
         }
