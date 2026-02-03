@@ -9,7 +9,7 @@ import java.util.List;
 
 @Data
 @Entity
-public class Butaca{
+public class Butaca {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idButaca;
@@ -20,11 +20,24 @@ public class Butaca{
 
     @ManyToOne
     @JoinColumn(name = "idSala", nullable = false)
-    @JsonIgnoreProperties("butacas") // Evitamos ciclos
+    @JsonIgnoreProperties("butacas")
     private Sala sala;
 
     @OneToMany(mappedBy = "butaca")
     @ToString.Exclude
-    @JsonIgnoreProperties("butaca")
+    @JsonIgnoreProperties("entradas")
     private List<Entrada> entradas;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Butaca)) return false;
+        Butaca b = (Butaca) o;
+        return idButaca != null && idButaca.equals(b.getIdButaca());
+    }
+
+    @Override
+    public int hashCode() {
+        return 31;
+    }
 }

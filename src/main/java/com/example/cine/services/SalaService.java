@@ -21,22 +21,19 @@ public class SalaService {
 
     // ================= CREAR SALA =================
     public Sala crearSala(Sala sala) {
-        Sala salaGuardada = salaRepository.save(sala);
-
+        List<Butaca> listaButacas = new ArrayList<>();
         int totalButacas = sala.getCapacidad();
         int columnas = 10;
         int filas = (int) Math.ceil((double) totalButacas / columnas);
-
-        List<Butaca> listaButacas = new ArrayList<>();
         char filaLetra = 'A';
         int creadas = 0;
 
         for (int f = 0; f < filas && creadas < totalButacas; f++) {
             for (int n = 1; n <= columnas && creadas < totalButacas; n++) {
                 Butaca b = new Butaca();
-                b.setSala(salaGuardada);
-                b.setFila(String.valueOf(filaLetra)); // fila como letra
+                b.setFila(String.valueOf(filaLetra));
                 b.setNumero(n);
+                b.setSala(sala);
                 b.setPosicion(String.valueOf(filaLetra) + n);
                 listaButacas.add(b);
                 creadas++;
@@ -44,8 +41,8 @@ public class SalaService {
             filaLetra++;
         }
 
-        butacaRepository.saveAll(listaButacas);
-        return salaGuardada;
+        sala.setButacas(listaButacas);
+        return salaRepository.save(sala);
     }
 
     // ================== OBTENER TODAS LAS SALAS ========================
