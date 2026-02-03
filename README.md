@@ -29,7 +29,6 @@ La aplicación ofrece:
 ## 🗺️ Diagrama Entidad–Relación (ER)
 
 ```mermaid
-erDiagram
     SALA ||--o{ BUTACA : tiene
     SALA ||--o{ PROYECCION : alberga
     PELICULA ||--o{ PROYECCION : se_proyecta
