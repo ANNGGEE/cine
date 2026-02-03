@@ -11,50 +11,47 @@ import java.util.List;
 
 @Service
 public class SalaService {
-    private final SalaRepository salaRepository;
-    private final ButacaRepository butacaRepository;
 
-    public SalaService(SalaRepository salaRepository, ButacaRepository butacaRepository) {
+    private final SalaRepository salaRepository;
+
+    public SalaService(SalaRepository salaRepository) {
         this.salaRepository = salaRepository;
-        this.butacaRepository = butacaRepository;
     }
 
-    // ================= CREAR SALA =================
-        public Sala crearSala(Sala sala) {
-            List<Butaca> listaButacas = new ArrayList<>();
-            int totalButacas = sala.getCapacidad();
-            int columnas = 10; // máximo por fila
-            int filas = (int) Math.ceil((double) totalButacas / columnas);
-            char filaLetra = 'A';
-            int creadas = 0;
+    public Sala crearSala(Sala sala) {
+        // Creamos lista de butacas
+        List<Butaca> listaButacas = new ArrayList<>();
+        int totalButacas = sala.getCapacidad();
+        int columnas = 10;
+        int filas = (int) Math.ceil((double) totalButacas / columnas);
+        char filaLetra = 'A';
+        int creadas = 0;
 
-            for (int f = 0; f < filas && creadas < totalButacas; f++) {
-                for (int n = 1; n <= columnas && creadas < totalButacas; n++) {
-                    Butaca b = new Butaca();
-                    b.setFila(String.valueOf(filaLetra));
-                    b.setNumero(n);
-                    b.setPosicion(filaLetra + String.valueOf(n));
-                    b.setSala(sala);
-                    listaButacas.add(b);
-                    creadas++;
-                }
-                filaLetra++;
+        for (int f = 0; f < filas && creadas < totalButacas; f++) {
+            for (int n = 1; n <= columnas && creadas < totalButacas; n++) {
+                Butaca b = new Butaca();
+                b.setFila(String.valueOf(filaLetra));
+                b.setNumero(n);
+                b.setPosicion(filaLetra + String.valueOf(n));
+                b.setSala(sala);
+                listaButacas.add(b);
+                creadas++;
             }
-
-            sala.setButacas(listaButacas);
-            return salaRepository.save(sala);
+            filaLetra++;
         }
 
-        // ================== OBTENER TODAS LAS SALAS ========================
-        public List<Sala> obtenerTodas() {
-            return salaRepository.findAll();
-        }
+        sala.setButacas(listaButacas); // Asignamos todas antes de guardar
+        return salaRepository.save(sala); // Guarda Sala + Butacas
+    }
 
-        // ================== OBTENER SALA POR ID =========================
-        public Sala obtenerPorId(Long idSala) {
-            return salaRepository.findById(idSala)
-                    .orElseThrow(() -> new RuntimeException("Sala no encontrada"));
-        }
+    public List<Sala> obtenerTodas() {
+        return salaRepository.findAll();
+    }
+
+    public Sala obtenerPorId(Long idSala) {
+        return salaRepository.findById(idSala)
+                .orElseThrow(() -> new RuntimeException("Sala no encontrada"));
+    }
 
         // ================= ELIMINAR =================
         public void eliminar(Long id) {

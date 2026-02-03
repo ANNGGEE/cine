@@ -1,6 +1,7 @@
 package com.example.cine.services;
 
 import com.example.cine.entity.Butaca;
+import com.example.cine.entity.Proyeccion;
 import com.example.cine.entity.Sala;
 import com.example.cine.repositories.ButacaRepository;
 import com.example.cine.repositories.SalaRepository;
@@ -26,6 +27,11 @@ public class ButacaService {
 
         butaca.setSala(sala);
         return butacaRepository.save(butaca);
+    }
+
+    // ======================= OBTENER BUTACAS LIBRES =======================
+    public List<Butaca> obtenerButacasLibres(Proyeccion proyeccion){
+        return butacaRepository.findButacasLibres(proyeccion.getSala().getIdSala(), proyeccion.getIdProyeccion());
     }
 
     // ================ OBTENEMOS TODAS LAS BUTACAS ====================

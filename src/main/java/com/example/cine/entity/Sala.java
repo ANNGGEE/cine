@@ -1,5 +1,6 @@
 package com.example.cine.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
@@ -32,7 +33,7 @@ public class Sala {
     private List<Proyeccion> proyecciones;
 
     @OneToMany(mappedBy = "sala", cascade = CascadeType.ALL, orphanRemoval = true)
-    @ToString.Exclude
+    @JsonIgnoreProperties("sala")
     private List<Butaca> butacas;
 
     public Long getIdSala() {
