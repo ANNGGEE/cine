@@ -20,45 +20,45 @@ public class SalaService {
     }
 
     // ================= CREAR SALA =================
-    public Sala crearSala(Sala sala) {
-        List<Butaca> listaButacas = new ArrayList<>();
-        int totalButacas = sala.getCapacidad();
-        int columnas = 10;
-        int filas = (int) Math.ceil((double) totalButacas / columnas);
-        char filaLetra = 'A';
-        int creadas = 0;
+        public Sala crearSala(Sala sala) {
+            List<Butaca> listaButacas = new ArrayList<>();
+            int totalButacas = sala.getCapacidad();
+            int columnas = 10; // máximo por fila
+            int filas = (int) Math.ceil((double) totalButacas / columnas);
+            char filaLetra = 'A';
+            int creadas = 0;
 
-        for (int f = 0; f < filas && creadas < totalButacas; f++) {
-            for (int n = 1; n <= columnas && creadas < totalButacas; n++) {
-                Butaca b = new Butaca();
-                b.setFila(String.valueOf(filaLetra));
-                b.setNumero(n);
-                b.setSala(sala);
-                b.setPosicion(String.valueOf(filaLetra) + n);
-                listaButacas.add(b);
-                creadas++;
+            for (int f = 0; f < filas && creadas < totalButacas; f++) {
+                for (int n = 1; n <= columnas && creadas < totalButacas; n++) {
+                    Butaca b = new Butaca();
+                    b.setFila(String.valueOf(filaLetra));
+                    b.setNumero(n);
+                    b.setPosicion(filaLetra + String.valueOf(n));
+                    b.setSala(sala);
+                    listaButacas.add(b);
+                    creadas++;
+                }
+                filaLetra++;
             }
-            filaLetra++;
+
+            sala.setButacas(listaButacas);
+            return salaRepository.save(sala);
         }
 
-        sala.setButacas(listaButacas);
-        return salaRepository.save(sala);
-    }
+        // ================== OBTENER TODAS LAS SALAS ========================
+        public List<Sala> obtenerTodas() {
+            return salaRepository.findAll();
+        }
 
-    // ================== OBTENER TODAS LAS SALAS ========================
-    public List<Sala> obtenerTodas(){
-        return salaRepository.findAll();
-    }
+        // ================== OBTENER SALA POR ID =========================
+        public Sala obtenerPorId(Long idSala) {
+            return salaRepository.findById(idSala)
+                    .orElseThrow(() -> new RuntimeException("Sala no encontrada"));
+        }
 
-    // ============================== OBTENER SALAS POR ID =========================
-    public Sala obtenerPorId(Long idSala){
-        return salaRepository.findById(idSala)
-                .orElseThrow(() -> new RuntimeException("Sala no encontrada"));
+        // ================= ELIMINAR =================
+        public void eliminar(Long id) {
+            Sala sala = obtenerPorId(id);
+            salaRepository.delete(sala);
+        }
     }
-
-    // ================= ELIMINAR =================
-    public void eliminar(Long id) {
-        Sala sala = obtenerPorId(id);
-        salaRepository.delete(sala);
-    }
-}
