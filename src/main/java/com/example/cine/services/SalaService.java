@@ -21,19 +21,10 @@ public class SalaService {
 
     // ================= CREAR SALA =================
     public Sala crearSala(Sala sala) {
-        if (sala.getNumero() <= 0) {
-            throw new RuntimeException("El número de la sala debe ser mayor que 0");
-        }
-        if (sala.getCapacidad() <= 0) {
-            throw new RuntimeException("La sala debe tener al menos 1 butaca");
-        }
-
-        // Guardamos la sala primero
         Sala salaGuardada = salaRepository.save(sala);
 
-        // Creamos las butacas según la capacidad
         int totalButacas = sala.getCapacidad();
-        int columnas = 10; // máximo de columnas por fila
+        int columnas = 10;
         int filas = (int) Math.ceil((double) totalButacas / columnas);
 
         List<Butaca> listaButacas = new ArrayList<>();
@@ -44,19 +35,16 @@ public class SalaService {
             for (int n = 1; n <= columnas && creadas < totalButacas; n++) {
                 Butaca b = new Butaca();
                 b.setSala(salaGuardada);
-                b.setFila(String.valueOf(filaLetra));
+                b.setFila(String.valueOf(filaLetra)); // fila como letra
                 b.setNumero(n);
-                b.setPosicion(filaLetra + String.valueOf(n));
-
+                b.setPosicion(String.valueOf(filaLetra) + n);
                 listaButacas.add(b);
                 creadas++;
             }
             filaLetra++;
         }
 
-        // Guardamos todas las butacas en un solo batch
         butacaRepository.saveAll(listaButacas);
-
         return salaGuardada;
     }
 

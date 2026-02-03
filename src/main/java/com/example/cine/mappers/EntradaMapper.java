@@ -13,7 +13,7 @@ public class EntradaMapper {
         dto.setTituloPelicula(entrada.getProyeccion().getPelicula().getTitulo());
         dto.setSala(entrada.getProyeccion().getSala().getDescripcion());
 
-        dto.setFila(entrada.getButaca().getFila());
+        dto.setFila(entrada.getButaca().getFila()); // ahora fila es String
         dto.setNumeroButaca(entrada.getButaca().getNumero());
 
         dto.setFecha(entrada.getProyeccion().getFecha());

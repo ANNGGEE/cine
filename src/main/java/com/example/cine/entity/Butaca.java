@@ -15,8 +15,7 @@ public class Butaca{
     private Long idButaca;
 
     private String posicion;
-
-    private int fila;
+    private String fila;
     private Integer numero;
 
     @ManyToOne
