@@ -197,7 +197,7 @@ La aplicación incluye un menú interactivo que permite:
 1. Clonar el repositorio:
 
 ```bash
-git clone https://github.com/tu-usuario/cine-app.git
+git clone https://github.com/ANNGGEE/cine/
 ```
 
 2. Ejecutar el proyecto:
