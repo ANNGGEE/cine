@@ -188,6 +188,16 @@ public class EntradaService {
         return entradaRepository.save(entrada);
     }
 
+    public List<Entrada> obtenerEntradasCancelable() {
+        LocalDateTime ahoraMas2Horas = LocalDateTime.now().plusHours(2);
+        return entradaRepository.findAll().stream()
+                .filter(entrada ->
+                        entrada.getProyeccion().getFecha().atTime(entrada.getProyeccion().getHorario())
+                                .isAfter(ahoraMas2Horas) && !entrada.getCancelada()
+                )
+                .toList();
+    }
+
 // =================== ENTRADAS POR CLIENTE ================================
 
     public List<Entrada> entradasPorAsistente(Long idAsistente) {

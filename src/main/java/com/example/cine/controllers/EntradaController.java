@@ -60,6 +60,12 @@ public class EntradaController{
         ));
     }
 
+    @GetMapping("/cancelables")
+    public ResponseEntity<List<Entrada>> listarEntradasCancelable() {
+        List<Entrada> cancelables = entradaService.obtenerEntradasCancelable();
+        return ResponseEntity.ok(cancelables);
+    }
+
     // ======================= ENTRADAS POR ASISTENTE ================================
     @GetMapping("/asistente/{id_asistente}")
     public ResponseEntity<List<EntradaDTO>> entradasPorAsistente(@PathVariable Long idAsistente){
