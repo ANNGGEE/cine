@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class EntradaService {
@@ -75,6 +76,41 @@ public class EntradaService {
         Asistente asistente = asistenteRepository.findById(idAsistente)
                 .orElseThrow(() -> new RuntimeException("Asistente no encontrado"));
         return entradaRepository.findByAsistente(asistente);
+    }
+
+        // Devuelve las butacas libres para una proyección
+    public List<Butaca> obtenerButacasLibres(Proyeccion proyeccion) {
+        List<Butaca> todas = proyeccion.getSala().getButacas();
+        List<Entrada> ocupadas = entradaRepository.findByProyeccion(proyeccion);
+
+        // Filtramos las que ya están compradas
+        return todas.stream()
+                .filter(b -> ocupadas.stream().noneMatch(e -> e.getButaca().equals(b)))
+                .collect(Collectors.toList());
+    }
+
+    // Comprar entradas (transaccional)
+    @Transactional
+    public void comprarEntradas(Asistente asistente, Proyeccion proyeccion, int cantidad) {
+        List<Butaca> libres = obtenerButacasLibres(proyeccion);
+
+        if (libres.size() < cantidad) {
+            throw new RuntimeException("No hay suficientes butacas libres. Quedan: " + libres.size());
+        }
+
+        for (int i = 0; i < cantidad; i++) {
+            Butaca b = libres.get(i);
+
+            Entrada e = new Entrada();
+            e.setAsistente(asistente);
+            e.setProyeccion(proyeccion);
+            e.setButaca(b);
+            e.setFechacompra(LocalDateTime.now());
+            e.setCancelada(false);
+            e.setPrecio(8.0); // ejemplo
+
+            entradaRepository.save(e);
+        }
     }
 
     // =================== COMPRA AUTOMÁTICA (PRIMER ASIENTO LIBRE) =========

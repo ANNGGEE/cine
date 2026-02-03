@@ -16,6 +16,8 @@ public interface EntradaRepository extends JpaRepository<Entrada, Long>{
     List<Entrada> findByAsistente(Asistente asistente);
     List<Entrada> findByAsistenteAndCanceladaFalse(Asistente asistente);
 
+    boolean existsByProyeccionAndButaca(Proyeccion proyeccion);
+
     boolean existsByProyeccionAndButacaAndCanceladaFalse(
             Proyeccion proyeccion,
             Butaca butaca

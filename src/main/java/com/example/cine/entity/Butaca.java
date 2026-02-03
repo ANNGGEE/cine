@@ -14,8 +14,13 @@ public class Butaca {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idButaca;
 
+    @Column(nullable = false)
     private String posicion;
+
+    @Column(nullable = false)
     private String fila;
+
+    @Column(nullable = false)
     private Integer numero;
 
     @ManyToOne
@@ -28,16 +33,16 @@ public class Butaca {
     @JsonIgnoreProperties("entradas")
     private List<Entrada> entradas;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Butaca)) return false;
-        Butaca b = (Butaca) o;
-        return idButaca != null && idButaca.equals(b.getIdButaca());
-    }
-
-    @Override
-    public int hashCode() {
-        return 31;
-    }
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) return true;
+//        if (!(o instanceof Butaca)) return false;
+//        Butaca b = (Butaca) o;
+//        return idButaca != null && idButaca.equals(b.getIdButaca());
+//    }
+//
+//    @Override
+//    public int hashCode() {
+//        return 31;
+//    }
 }
