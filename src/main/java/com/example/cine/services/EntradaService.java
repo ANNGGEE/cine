@@ -28,8 +28,16 @@ public class EntradaService {
     }
 
     // =================================== COMPRA DE ENTRADA =============================================
-    public Entrada comprarEntrada(Long idAsistente, Long idProyeccion, Long idButaca, Double precio) {
-        if(precio <= 0) throw new RuntimeException("Precio inválido");
+    @Transactional
+    public Entrada comprarEntrada(
+            Long idAsistente,
+            Long idProyeccion,
+            Long idButaca,
+            Double precio
+    ) {
+        if (precio <= 0) {
+            throw new RuntimeException("Precio inválido");
+        }
 
         Asistente asistente = asistenteRepository.findById(idAsistente)
                 .orElseThrow(() -> new RuntimeException("Asistente no encontrado"));
@@ -40,26 +48,19 @@ public class EntradaService {
         Butaca butaca = butacaRepository.findById(idButaca)
                 .orElseThrow(() -> new RuntimeException("Butaca no encontrada"));
 
-        LocalDateTime fechaHora = LocalDateTime.of(proyeccion.getFecha(), proyeccion.getHorario());
-        if(fechaHora.isBefore(LocalDateTime.now())){
-            throw new RuntimeException("No se pueden comprar entradas para la proyección");
+        // 🔒 COMPROBACIÓN CLAVE
+        boolean ocupada = entradaRepository
+                .existsByProyeccionAndButacaAndCanceladaFalse(proyeccion, butaca);
+
+        if (ocupada) {
+            throw new RuntimeException(
+                    "❌ La butaca " + butaca.getPosicion() + " ya está ocupada"
+            );
         }
 
-        if(!butaca.getSala().getIdSala().equals(proyeccion.getSala().getIdSala())){
-            throw new RuntimeException("La butaca no pertenece a la sala de esta proyección");
-        }
-
-        long entradasAsistente = entradaRepository.countByAsistenteAndCanceladaFalse(asistente);
-        if(entradasAsistente >= 5){
-            throw new RuntimeException("El asistente ya tiene 5 entradas");
-        }
-
-        if(entradaRepository.existsByProyeccionAndButacaAndCanceladaFalse(proyeccion, butaca)){
-            throw new RuntimeException("La butaca ya está ocupada en esta proyección");
-        }
-
-        if(entradaRepository.countByProyeccionAndCanceladaFalse(proyeccion) >= proyeccion.getSala().getCapacidad()){
-            throw new RuntimeException("Aforo completo, no se pueden vender más entradas");
+        // 🔐 Asegurar que pertenece a la sala
+        if (!butaca.getSala().getIdSala().equals(proyeccion.getSala().getIdSala())) {
+            throw new RuntimeException("La butaca no pertenece a esta sala");
         }
 
         Entrada entrada = new Entrada();
@@ -67,6 +68,8 @@ public class EntradaService {
         entrada.setProyeccion(proyeccion);
         entrada.setButaca(butaca);
         entrada.setPrecio(precio);
+        entrada.setFechacompra(LocalDateTime.now());
+        entrada.setCancelada(false);
 
         return entradaRepository.save(entrada);
     }

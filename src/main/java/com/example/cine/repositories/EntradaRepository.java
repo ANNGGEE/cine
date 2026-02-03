@@ -10,13 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface EntradaRepository extends JpaRepository<Entrada, Long>{
-    List<Entrada> findByProyeccion(Proyeccion proyeccion);
-    List<Entrada> findByProyeccionAndButaca(Proyeccion proyeccion, Butaca butaca);
-    List<Entrada> findByAsistente(Asistente asistente);
-    List<Entrada> findByAsistenteAndCanceladaFalse(Asistente asistente);
-
-    boolean existsByProyeccionAndButaca(Proyeccion proyeccion);
+public interface EntradaRepository extends JpaRepository<Entrada, Long> {
 
     boolean existsByProyeccionAndButacaAndCanceladaFalse(
             Proyeccion proyeccion,
@@ -24,5 +18,11 @@ public interface EntradaRepository extends JpaRepository<Entrada, Long>{
     );
 
     long countByProyeccionAndCanceladaFalse(Proyeccion proyeccion);
+
     long countByAsistenteAndCanceladaFalse(Asistente asistente);
+
+    List<Entrada> findByProyeccion(Proyeccion proyeccion);
+
+    List<Entrada> findByAsistente(Asistente asistente);
 }
+
