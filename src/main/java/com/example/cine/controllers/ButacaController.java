@@ -1,5 +1,6 @@
 package com.example.cine.controllers;
 
+import com.example.cine.dto.ButacaDTO;
 import com.example.cine.entity.Butaca;
 import com.example.cine.services.ButacaService;
 import org.springframework.http.ResponseEntity;
@@ -40,12 +41,26 @@ public class ButacaController {
     }
 
     // ================= OBTENER POR SALA =================
-    @GetMapping("/sala/{id_sala}")
-    public ResponseEntity<List<Butaca>> obtenerPorSala(@PathVariable Long idSala) {
-        return ResponseEntity.ok(
-                butacaService.obtenerPorSala(idSala)
-        );
+    @GetMapping("/sala/{idSala}")
+    public ResponseEntity<List<ButacaDTO>> obtenerPorSala(@PathVariable Long idSala) {
+        List<Butaca> butacas = butacaService.obtenerPorSala(idSala);
+
+        List<ButacaDTO> dto = butacas.stream().map(b -> {
+            ButacaDTO d = new ButacaDTO();
+            d.setIdButaca(b.getIdButaca());
+            d.setFila(b.getFila());
+            d.setNumero(b.getNumero());
+            return d;
+        }).toList();
+
+        return ResponseEntity.ok(dto);
     }
+//    @GetMapping("/sala/{id_sala}")
+//    public ResponseEntity<List<Butaca>> obtenerPorSala(@PathVariable Long idSala) {
+//        return ResponseEntity.ok(
+//                butacaService.obtenerPorSala(idSala)
+//        );
+//    }
 
     // ================= ELIMINAR BUTACA =================
     @DeleteMapping("/{id}")

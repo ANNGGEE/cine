@@ -18,3 +18,4 @@ public class CineApplication {
 // Deja comprar más de 5 entradas
 // No debe dejar cancelar entradas dos horas antes de la proyección
 // Poner un precio fijo, que no deje que lo ponga el usuario
+// EL README

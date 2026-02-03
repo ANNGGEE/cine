@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/entradas")
@@ -50,11 +51,13 @@ public class EntradaController{
     }
 
     // ================== CANCELAR ENTRADA ============================
-    @PutMapping("/cancelar/{id_entrada}")
-    public ResponseEntity<Entrada> cancelarEntrada(@PathVariable Long idEntrada){
-        return ResponseEntity.ok(
-                entradaService.cancelarEntrada(idEntrada)
-        );
+    @PutMapping("/cancelar/{idEntrada}")
+    public ResponseEntity<Map<String, Object>> cancelarEntrada(@PathVariable Long idEntrada){
+        Entrada e = entradaService.cancelarEntrada(idEntrada);
+        return ResponseEntity.ok(Map.of(
+                "idEntrada", e.getIdEntrada(),
+                "cancelada", e.getCancelada()
+        ));
     }
 
     // ======================= ENTRADAS POR ASISTENTE ================================

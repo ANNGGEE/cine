@@ -35,6 +35,7 @@ public class Entrada{
     // private Butaca butaca;
 
     @ManyToOne
+    @JsonIgnoreProperties({"entradas", "proyecciones"})
     @JoinColumn(name = "idAsistente", nullable = false)
     private Asistente asistente;
 

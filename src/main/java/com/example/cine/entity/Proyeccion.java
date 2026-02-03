@@ -1,6 +1,7 @@
 package com.example.cine.entity;
 
 import ch.qos.logback.core.pattern.util.AlmostAsIsEscapeUtil;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -35,6 +36,7 @@ public class Proyeccion {
     private List<Entrada> entradas;
 
     @ManyToMany(mappedBy = "proyecciones")
+    @JsonIgnoreProperties({"entradas", "proyecciones"})
     private List<Asistente> asistentes;
 }
 
