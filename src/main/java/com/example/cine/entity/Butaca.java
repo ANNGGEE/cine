@@ -29,7 +29,7 @@ public class Butaca {
     private Sala sala;
 
     @OneToMany(mappedBy = "butaca")
-    @ToString.Exclude
+    @ToString.Exclude // @ToString.Exclude le dice a Lombok que NO incluya ese atributo en el método toString() que genera automáticamente para la clase.
     @JsonIgnoreProperties("entradas")
     private List<Entrada> entradas;
 

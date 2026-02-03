@@ -17,3 +17,4 @@ public class CineApplication {
 // Me da error al listar las entradas de un asistente si entro y vuelvo a salir
 // Deja comprar más de 5 entradas
 // No debe dejar cancelar entradas dos horas antes de la proyección
+// Poner un precio fijo, que no deje que lo ponga el usuario

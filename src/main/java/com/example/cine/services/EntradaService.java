@@ -48,17 +48,17 @@ public class EntradaService {
         Butaca butaca = butacaRepository.findById(idButaca)
                 .orElseThrow(() -> new RuntimeException("Butaca no encontrada"));
 
-        // 🔒 COMPROBACIÓN CLAVE
+        // COMPROBACIÓN CLAVE
         boolean ocupada = entradaRepository
                 .existsByProyeccionAndButacaAndCanceladaFalse(proyeccion, butaca);
 
         if (ocupada) {
             throw new RuntimeException(
-                    "❌ La butaca " + butaca.getPosicion() + " ya está ocupada"
+                    "La butaca " + butaca.getPosicion() + " ya está ocupada"
             );
         }
 
-        // 🔐 Asegurar que pertenece a la sala
+        // Asegurar que pertenece a la sala
         if (!butaca.getSala().getIdSala().equals(proyeccion.getSala().getIdSala())) {
             throw new RuntimeException("La butaca no pertenece a esta sala");
         }
@@ -110,7 +110,7 @@ public class EntradaService {
             e.setButaca(b);
             e.setFechacompra(LocalDateTime.now());
             e.setCancelada(false);
-            e.setPrecio(8.0); // ejemplo
+            e.setPrecio(8.0);
 
             entradaRepository.save(e);
         }

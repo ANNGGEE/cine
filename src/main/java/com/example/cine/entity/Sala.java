@@ -18,10 +18,8 @@ public class Sala {
     private String descripcion;
     private int capacidad;
 
-    // Constructor vacío obligatorio para JPA/Hibernate
     public Sala() {}
 
-    // Constructor con parámetros (para tu DataInitializer)
     public Sala(int numero, String descripcion, int capacidad) {
         this.numero = numero;
         this.descripcion = descripcion;
