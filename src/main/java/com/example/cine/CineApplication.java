@@ -12,3 +12,8 @@ public class CineApplication {
 		SpringApplication.run(CineApplication.class, args);
 	}
 }
+// Falla al comprar una butaca ya comprada otra vez
+// Falla a la hora de ver las entradas de un asistente
+// Me da error al listar las entradas de un asistente si entro y vuelvo a salir
+// Deja comprar más de 5 entradas
+// No debe dejar cancelar entradas dos horas antes de la proyección
