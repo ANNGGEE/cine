@@ -54,7 +54,8 @@ public class DataInitializer implements CommandLineRunner {
         // ==================== ASISTENTES ===============
         String[] nombres = {
                 "Juan Pérez", "María Gómez", "Luis Fernández",
-                "Ana López", "Carlos Ruiz", "Sofía Martínez"
+                "Ana López", "Carlos Ruiz", "Sofía Martínez",
+                "Ana Rodríguez", "Juanjo Velero"
         };
 
         for (String nombre : nombres) {
@@ -74,18 +75,18 @@ public class DataInitializer implements CommandLineRunner {
 
         // ==================== PROYECCIONES =================
 
-        // 🔴 PASADAS (ni compra ni cancelación)
-        crearProyeccion(p1, sala1, LocalDate.now().minusDays(4), LocalTime.of(18, 0));
+        // 🔴 PASADAS (NO compra / NO cancelación)
+        crearProyeccion(p1, sala1, LocalDate.now().minusDays(5), LocalTime.of(18, 0));
         crearProyeccion(p2, sala2, LocalDate.now().minusDays(2), LocalTime.of(20, 0));
 
-        // 🟡 HOY (compra BLOQUEADA, cancelación BLOQUEADA)
-        crearProyeccion(p3, sala3, LocalDate.now(), LocalTime.of(16, 0));
+        // 🟡 HOY (menos de 2h → compra NO / cancelación NO)
+        crearProyeccion(p3, sala3, LocalDate.now(), LocalTime.now().minusHours(1));
 
-        // 🟢 FUTURAS (COMPRA y CANCELACIÓN PERMITIDAS)
-        crearProyeccion(p4, sala1, LocalDate.now().plusDays(1), LocalTime.of(22, 0));
-        crearProyeccion(p4, sala1, LocalDate.now().plusDays(2), LocalTime.of(21, 30));
-        crearProyeccion(p5, sala2, LocalDate.now().plusDays(3), LocalTime.of(20, 0));
-        crearProyeccion(p5, sala3, LocalDate.now().plusDays(4), LocalTime.of(19, 30));
+        // 🟢 FUTURAS (compra y cancelación OK)
+        crearProyeccion(p4, sala1, LocalDate.now().plusDays(1), LocalTime.of(21, 30));
+        crearProyeccion(p4, sala1, LocalDate.now().plusDays(2), LocalTime.of(22, 0));
+        crearProyeccion(p5, sala2, LocalDate.now().plusDays(3), LocalTime.of(19, 0));
+        crearProyeccion(p5, sala3, LocalDate.now().plusDays(4), LocalTime.of(20, 30));
 
         // ==================== ENTRADAS ===================
         List<Proyeccion> proyecciones = proyeccionRepository.findAll();
@@ -94,12 +95,12 @@ public class DataInitializer implements CommandLineRunner {
             List<Butaca> butacas =
                     butacaRepository.findBySala_IdSala(pr.getSala().getIdSala());
 
-            // Vendemos 2 entradas por proyección
+            // 2 entradas activas
             for (int i = 0; i < Math.min(2, butacas.size()); i++) {
                 crearEntrada(asistentes.get(i), pr, butacas.get(i), false);
             }
 
-            // Una cancelada (para comprobar que vuelve a estar libre)
+            // 1 cancelada
             if (!butacas.isEmpty()) {
                 crearEntrada(
                         asistentes.get(0),
@@ -110,7 +111,7 @@ public class DataInitializer implements CommandLineRunner {
             }
         }
 
-        System.out.println("✅ DataInitializer cargado correctamente (regla 2h respetada)");
+        System.out.println("✅ DataInitializer COMPLETO cargado correctamente");
     }
 
     // ==================== MÉTODOS AUXILIARES ====================
@@ -125,11 +126,10 @@ public class DataInitializer implements CommandLineRunner {
 
     private void crearButacas(Sala sala) {
         int columnas = 10;
-        int filas = (int) Math.ceil((double) sala.getCapacidad() / columnas);
         char fila = 'A';
         int creadas = 0;
 
-        for (int f = 0; f < filas && creadas < sala.getCapacidad(); f++) {
+        while (creadas < sala.getCapacidad()) {
             for (int n = 1; n <= columnas && creadas < sala.getCapacidad(); n++) {
                 Butaca b = new Butaca();
                 b.setSala(sala);
