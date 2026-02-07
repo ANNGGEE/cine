@@ -1,175 +1,159 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>🎬 Cine Pastel Completo</title>
+    <meta charset="UTF-8" />
+    <title>Sistema de Gestión de Cine</title>
     <style>
-        body { font-family: "Segoe UI", sans-serif; background:#f7f8fc; padding:20px; color:#333; }
-        h1,h2 { text-align:center; color:#6c63ff; }
-        h2 { margin-top:30px; color:#5f5dbb; }
-        .card { background:#fff; padding:16px; border-radius:12px; margin-bottom:16px; box-shadow:0 8px 20px rgba(0,0,0,0.05); }
-        button { background:#a5b4fc; color:white; border:none; padding:8px 14px; border-radius:8px; cursor:pointer; }
-        button:disabled { background:#e5e7eb; color:#999; cursor:not-allowed; }
-        .ok { color:#16a34a; font-weight:bold; }
-        .bad { color:#dc2626; font-weight:bold; }
-        .butacas { display:grid; grid-template-columns:repeat(10,40px); gap:6px; margin-top:10px; }
-        .butaca { width:40px; height:40px; border-radius:6px; text-align:center; line-height:40px; cursor:pointer; font-size:12px; }
-        .libre { background:#bbf7d0; }
-        .ocupada { background:#fecaca; cursor:not-allowed; }
-        .seleccionada { background:#60a5fa; color:white; }
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h2 { color: #5555cc; }
+        button { margin: 5px 0; }
+        .section { margin-bottom: 30px; }
+        .list-item { margin-left: 15px; }
     </style>
 </head>
 <body>
 
-<h1>🎟️ Sistema de Gestión de Cine</h1>
+<h1>🎬 Sistema de Gestión de Cine</h1>
 
-<h2>👤 Asistentes</h2>
-<div class="card">
-    <button onclick="cargarAsistentes()">Listar asistentes</button>
-    <div id="asistentes"></div>
+<!-- Asistentes -->
+<div class="section">
+    <h2>👤 Asistentes</h2>
+    <button id="btnListarAsistentes">Listar asistentes</button>
+    <ul id="listaAsistentes"></ul>
 </div>
 
-<h2>🎬 Proyecciones</h2>
-<div class="card">
-    <button onclick="cargarProyecciones()">Listar proyecciones</button>
-    <div id="proyecciones"></div>
+<!-- Películas -->
+<div class="section">
+    <h2>🎥 Películas</h2>
+    <button id="btnListarPeliculas">Listar películas</button>
+    <ul id="listaPeliculas"></ul>
 </div>
 
-<h2>🪑 Selección de butaca</h2>
-<div class="card">
-    <input type="number" id="idProyeccion" placeholder="ID Proyección">
-    <button onclick="cargarButacas()">Ver butacas</button>
-    <div id="butacas" class="butacas"></div>
+<!-- Proyecciones -->
+<div class="section">
+    <h2>🎞️ Proyecciones</h2>
+    <button id="btnListarProyecciones">Listar proyecciones</button>
+    <ul id="listaProyecciones"></ul>
 </div>
 
-<h2>🛒 Comprar entrada</h2>
-<div class="card">
-    <input type="number" id="idAsistente" placeholder="ID Asistente">
-    <button id="btnComprar" onclick="comprarEntrada()" disabled>Comprar</button>
-    <p id="mensajeCompra"></p>
+<!-- Salas -->
+<div class="section">
+    <h2>🏟️ Salas</h2>
+    <button id="btnListarSalas">Listar salas</button>
+    <ul id="listaSalas"></ul>
 </div>
 
-<h2>❌ Cancelar entrada</h2>
-<div class="card">
-    <input type="number" id="idEntrada" placeholder="ID Entrada">
-    <button onclick="cancelarEntrada()">Cancelar</button>
-    <p id="mensajeCancelacion"></p>
+<!-- Butacas por sala -->
+<div class="section">
+    <h2>🪑 Butacas por sala</h2>
+    <input type="number" id="inputIdSala" placeholder="ID Sala" />
+    <button id="btnListarButacas">Listar butacas</button>
+    <ul id="listaButacas"></ul>
 </div>
 
 <script>
-    let butacaSeleccionada = null;
-    let proyeccionComprable = false;
-    let entradasAsistente = 0;
+    // Helper para limpiar listas
+    function limpiarLista(id) {
+        document.getElementById(id).innerHTML = '';
+    }
 
-    function cargarAsistentes() {
-        fetch("/asistentes")
-            .then(r => r.json())
+    // Helper para mostrar error
+    function mostrarError(id, error) {
+        const contenedor = document.getElementById(id);
+        contenedor.innerHTML = `<li style="color:red;">Error: ${error}</li>`;
+    }
+
+    // Listar asistentes
+    document.getElementById('btnListarAsistentes').addEventListener('click', () => {
+        limpiarLista('listaAsistentes');
+        fetch('/asistentes')
+            .then(res => res.json())
             .then(data => {
-                const div = document.getElementById("asistentes");
-                div.innerHTML = "";
+                const ul = document.getElementById('listaAsistentes');
                 data.forEach(a => {
-                    div.innerHTML += `<div>👤 ${a.nombre} (ID ${a.idAsistente}) → Entradas: ${a.totalEntradas || 0}</div>`;
+                    const li = document.createElement('li');
+                    li.textContent = `${a.nombre} (ID: ${a.idAsistente})`;
+                    ul.appendChild(li);
                 });
-            });
-    }
-
-    function cargarProyecciones() {
-        fetch("/proyecciones")
-            .then(r => r.json())
-            .then(data => {
-                const div = document.getElementById("proyecciones");
-                div.innerHTML = "";
-                const ahora = new Date();
-
-                data.forEach(p => {
-                    const fechaHora = new Date(p.fecha + "T" + p.horario);
-                    const comprable = fechaHora > ahora;
-                    div.innerHTML += `
-                        <div class="card">
-                            <strong>${p.peliculaTitulo}</strong><br>
-                            Sala: ${p.salaNombre}<br>
-                            Fecha: ${p.fecha} ${p.horario}<br>
-                            Compra:
-                            <span class="${comprable ? 'ok' : 'bad'}">
-                                ${comprable ? 'PERMITIDA' : 'BLOQUEADA'}
-                            </span><br>
-                            📊 Ocupación: ${p.ocupacion || 0}%<br>
-                            ID Proyección: ${p.idProyeccion}
-                        </div>
-                    `;
-                });
-            });
-    }
-
-    function cargarButacas() {
-        const id = document.getElementById("idProyeccion").value;
-        butacaSeleccionada = null;
-        document.getElementById("btnComprar").disabled = true;
-
-        fetch(`/entradas/libres?idProyeccion=${id}`)
-            .then(r => r.json())
-            .then(libres => {
-                const contenedor = document.getElementById("butacas");
-                contenedor.innerHTML = "";
-
-                libres.forEach(b => {
-                    const div = document.createElement("div");
-                    div.className = "butaca libre";
-                    div.innerText = b.posicion;
-                    div.onclick = () => {
-                        document.querySelectorAll(".butaca").forEach(x => x.classList.remove("seleccionada"));
-                        div.classList.add("seleccionada");
-                        butacaSeleccionada = b.idButaca;
-                        validarCompra();
-                    };
-                    contenedor.appendChild(div);
-                });
-
-                // Revisar si la proyección es comprable
-                fetch(`/proyecciones/${id}`)
-                    .then(r => r.json())
-                    .then(p => {
-                        const fechaHora = new Date(p.fecha + "T" + p.horario);
-                        proyeccionComprable = fechaHora > new Date();
-                        validarCompra();
-                    });
-            });
-    }
-
-    function validarCompra() {
-        const idAsistente = document.getElementById("idAsistente").value;
-        if (!idAsistente) return;
-        fetch(`/entradas/porAsistente?idAsistente=${idAsistente}`)
-            .then(r => r.json())
-            .then(e => {
-                entradasAsistente = e.length;
-                const btn = document.getElementById("btnComprar");
-                btn.disabled = !proyeccionComprable || !butacaSeleccionada || entradasAsistente >= 5;
-            });
-    }
-
-    function comprarEntrada() {
-        const asistente = document.getElementById("idAsistente").value;
-        const proyeccion = document.getElementById("idProyeccion").value;
-
-        fetch(`/entradas?idAsistente=${asistente}&idProyeccion=${proyeccion}&idButaca=${butacaSeleccionada}&precio=8.5`,
-            { method: "POST" })
-            .then(r => r.text())
-            .then(msg => {
-                document.getElementById("mensajeCompra").innerText = msg;
-                cargarAsistentes(); // actualizar número de entradas
-                validarCompra();
             })
-            .catch(err => document.getElementById("mensajeCompra").innerText = err);
-    }
+            .catch(err => mostrarError('listaAsistentes', err));
+    });
 
-    function cancelarEntrada() {
-        const idEntrada = document.getElementById("idEntrada").value;
-        fetch(`/entradas/cancelar?idEntrada=${idEntrada}`, { method: "POST" })
-            .then(r => r.text())
-            .then(msg => document.getElementById("mensajeCancelacion").innerText = msg)
-            .catch(err => document.getElementById("mensajeCancelacion").innerText = err);
-    }
+    // Listar películas
+    document.getElementById('btnListarPeliculas').addEventListener('click', () => {
+        limpiarLista('listaPeliculas');
+        fetch('/peliculas')
+            .then(res => res.json())
+            .then(data => {
+                const ul = document.getElementById('listaPeliculas');
+                data.forEach(p => {
+                    const li = document.createElement('li');
+                    li.textContent = `${p.titulo} (${p.anio}) - ID: ${p.idPelicula}`;
+                    ul.appendChild(li);
+                });
+            })
+            .catch(err => mostrarError('listaPeliculas', err));
+    });
+
+    // Listar proyecciones
+    document.getElementById('btnListarProyecciones').addEventListener('click', () => {
+        limpiarLista('listaProyecciones');
+        fetch('/proyecciones')
+            .then(res => res.json())
+            .then(data => {
+                const ul = document.getElementById('listaProyecciones');
+                data.forEach(p => {
+                    const fecha = p.fecha; // suponiendo campo fecha
+                    const hora = p.horario; // suponiendo campo horario
+                    const salaId = p.sala ? p.sala.idSala : 'N/A';
+                    const peliculaTitulo = p.pelicula ? p.pelicula.titulo : 'N/A';
+                    const li = document.createElement('li');
+                    li.textContent = `ID: ${p.idProyeccion} - ${peliculaTitulo} - Sala: ${salaId} - Fecha: ${fecha} ${hora}`;
+                    ul.appendChild(li);
+                });
+            })
+            .catch(err => mostrarError('listaProyecciones', err));
+    });
+
+    // Listar salas
+    document.getElementById('btnListarSalas').addEventListener('click', () => {
+        limpiarLista('listaSalas');
+        fetch('/salas')
+            .then(res => res.json())
+            .then(data => {
+                const ul = document.getElementById('listaSalas');
+                data.forEach(s => {
+                    const li = document.createElement('li');
+                    li.textContent = `Sala ID: ${s.idSala} - Nombre: ${s.nombre || 'Sin nombre'}`;
+                    ul.appendChild(li);
+                });
+            })
+            .catch(err => mostrarError('listaSalas', err));
+    });
+
+    // Listar butacas por sala
+    document.getElementById('btnListarButacas').addEventListener('click', () => {
+        limpiarLista('listaButacas');
+        const idSala = document.getElementById('inputIdSala').value;
+        if (!idSala) {
+            mostrarError('listaButacas', 'Debe ingresar un ID de sala');
+            return;
+        }
+        fetch(`/butacas/sala/${idSala}`)
+            .then(res => {
+                if (!res.ok) throw new Error(`Error HTTP ${res.status}`);
+                return res.json();
+            })
+            .then(data => {
+                const ul = document.getElementById('listaButacas');
+                data.forEach(b => {
+                    const li = document.createElement('li');
+                    li.textContent = `Butaca ID: ${b.idButaca} - Fila: ${b.fila} - Número: ${b.numero}`;
+                    ul.appendChild(li);
+                });
+            })
+            .catch(err => mostrarError('listaButacas', err));
+    });
 </script>
 
 </body>

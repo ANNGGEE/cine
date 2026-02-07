@@ -29,15 +29,8 @@ public class EntradaService {
 
     // =================================== COMPRA DE ENTRADA =============================================
     @Transactional
-    public Entrada comprarEntrada(
-            Long idAsistente,
-            Long idProyeccion,
-            Long idButaca,
-            Double precio
-    ) {
-        if (precio <= 0) {
-            throw new RuntimeException("Precio inválido");
-        }
+    public Entrada comprarEntrada(Long idAsistente, Long idProyeccion, Long idButaca, Double precio) {
+        if (precio <= 0) throw new RuntimeException("Precio inválido");
 
         Asistente asistente = asistenteRepository.findById(idAsistente)
                 .orElseThrow(() -> new RuntimeException("Asistente no encontrado"));
@@ -48,22 +41,20 @@ public class EntradaService {
         Butaca butaca = butacaRepository.findById(idButaca)
                 .orElseThrow(() -> new RuntimeException("Butaca no encontrada"));
 
-        // Combinar fecha y horario para comparar con ahora
         LocalDateTime fechaHoraProyeccion = LocalDateTime.of(proyeccion.getFecha(), proyeccion.getHorario());
         if (fechaHoraProyeccion.isBefore(LocalDateTime.now())) {
             throw new RuntimeException("No se puede comprar entradas para proyecciones pasadas");
         }
 
-        boolean ocupada = entradaRepository
-                .existsByProyeccionAndButacaAndCanceladaFalse(proyeccion, butaca);
-
-        if (ocupada) {
-            throw new RuntimeException(
-                    "La butaca " + butaca.getPosicion() + " ya está ocupada"
-            );
+        // ==================== REGLA 2: Máximo 5 entradas ====================
+        long totalEntradas = entradaRepository.countByAsistenteAndCanceladaFalse(asistente);
+        if (totalEntradas >= 5) {
+            throw new RuntimeException("El asistente ya tiene 5 entradas compradas, no puede comprar más");
         }
 
-        // Asegurar que pertenece a la sala
+        boolean ocupada = entradaRepository.existsByProyeccionAndButacaAndCanceladaFalse(proyeccion, butaca);
+        if (ocupada) throw new RuntimeException("La butaca " + butaca.getPosicion() + " ya está ocupada");
+
         if (!butaca.getSala().getIdSala().equals(proyeccion.getSala().getIdSala())) {
             throw new RuntimeException("La butaca no pertenece a esta sala");
         }
@@ -187,12 +178,6 @@ public class EntradaService {
 
         if (fechaHoraProyeccion.minusHours(2).isBefore(LocalDateTime.now())) {
             throw new RuntimeException("No se puede cancelar la entrada con menos de dos horas");
-        }
-
-        // ==================== REGLA 2: Máximo 5 entradas por asistente ====================
-        List<Entrada> entradasAsistente = entradaRepository.findByAsistente_IdAsistente(idAsistente);
-        if (entradasAsistente.size() >= 5) {
-            throw new RuntimeException("El asistente ya tiene 5 entradas compradas, no puede comprar más");
         }
 
         entrada.setCancelada(true);

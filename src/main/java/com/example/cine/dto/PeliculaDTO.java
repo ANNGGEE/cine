@@ -7,4 +7,5 @@ public class PeliculaDTO {
     private Long idPelicula;
     private String titulo;
     private String genero;
+    private Integer duracion;
 }

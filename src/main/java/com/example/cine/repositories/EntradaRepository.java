@@ -25,4 +25,3 @@ public interface EntradaRepository extends JpaRepository<Entrada, Long> {
 
     List<Entrada> findByAsistente(Asistente asistente);
 }
-

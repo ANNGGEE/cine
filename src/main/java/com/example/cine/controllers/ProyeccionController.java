@@ -3,6 +3,8 @@ package com.example.cine.controllers;
 
 import com.example.cine.dto.ProyeccionDTO;
 import com.example.cine.entity.Proyeccion;
+import com.example.cine.mappers.PeliculaMapper;
+import com.example.cine.mappers.SalaMapper;
 import com.example.cine.services.EntradaService;
 import com.example.cine.services.ProyeccionService;
 import org.springframework.data.domain.Page;
@@ -49,9 +51,9 @@ public class ProyeccionController {
 
         dto.setIdProyeccion(p.getIdProyeccion());
         dto.setFecha(p.getFecha());
-        dto.setHorario(p.getHorario().toString());
-        dto.setPeliculaTitulo(p.getPelicula().getTitulo());
-        dto.setSala("Sala " + p.getSala().getNumero() + " - " + p.getSala().getDescripcion());
+        dto.setHorario(p.getHorario());
+        dto.setPelicula(PeliculaMapper.toDTO(p.getPelicula()));
+        dto.setSala(SalaMapper.toDTO(p.getSala()));
 
         return ResponseEntity.ok(dto);
     }

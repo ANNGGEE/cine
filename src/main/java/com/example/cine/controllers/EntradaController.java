@@ -26,25 +26,22 @@ public class EntradaController {
                                                      @RequestParam Long idProyeccion,
                                                      @RequestParam Long idButaca,
                                                      @RequestParam Double precio) {
-        if (precio <= 0) throw new RuntimeException("Precio inválido");
-        Entrada e = entradaService.comprarEntrada(idAsistente, idProyeccion, idButaca, precio);
-
         try {
             Entrada e = entradaService.comprarEntrada(idAsistente, idProyeccion, idButaca, precio);
-            return ResponseEntity.ok("Entrada comprada con éxito. ID: " + e.getIdEntrada());
+
+            EntradaDTO dto = new EntradaDTO();
+            dto.setIdEntrada(e.getIdEntrada());
+            dto.setPrecio(e.getPrecio());
+            dto.setNombreAsistente(e.getAsistente().getNombre());
+            dto.setCancelada(e.getCancelada());
+            dto.setFila(e.getButaca().getFila());
+            dto.setNumeroButaca(e.getButaca().getNumero());
+
+            return ResponseEntity.ok(dto);
+
         } catch (RuntimeException ex) {
-            return ResponseEntity.badRequest().body(ex.getMessage());
+            return ResponseEntity.badRequest().body(null); // o lanzar un DTO con mensaje de error
         }
-
-        EntradaDTO dto = new EntradaDTO();
-        dto.setIdEntrada(e.getIdEntrada());
-        dto.setPrecio(e.getPrecio());
-        dto.setNombreAsistente(e.getAsistente().getNombre());
-        dto.setCancelada(e.getCancelada());
-        dto.setFila(e.getButaca().getFila());
-        dto.setNumeroButaca(e.getButaca().getNumero());
-
-        return ResponseEntity.ok(dto);
     }
 
     // ================== ASIENTOS LIBRES ============================
