@@ -54,7 +54,6 @@ public class EntradaService {
             throw new RuntimeException("No se puede comprar entradas para proyecciones pasadas");
         }
 
-        // COMPROBACIÓN CLAVE
         boolean ocupada = entradaRepository
                 .existsByProyeccionAndButacaAndCanceladaFalse(proyeccion, butaca);
 
