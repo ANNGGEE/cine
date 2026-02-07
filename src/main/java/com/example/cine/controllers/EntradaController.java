@@ -13,31 +13,38 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/entradas")
-public class EntradaController{
+public class EntradaController {
+
     private final EntradaService entradaService;
 
     public EntradaController(EntradaService entradaService) {
         this.entradaService = entradaService;
     }
 
-    // ================= COMPRAR ENTRADA =======================================
-    @PostMapping("/comprar")
-    public ResponseEntity<EntradaDTO> comprarEntrada(
-            @RequestParam Long idAsistente,
-            @RequestParam Long idProyeccion,
-            @RequestParam Long idButaca,
-            @RequestParam Double precio
-    ){
-        return ResponseEntity.ok(
-                EntradaMapper.toDTO(
-                entradaService.comprarEntrada(
-                        idAsistente,
-                        idProyeccion,
-                        idButaca,
-                        precio
-                )
-                )
-        );
+    @PostMapping("/entradas")
+    public ResponseEntity<EntradaDTO> comprarEntrada(@RequestParam Long idAsistente,
+                                                     @RequestParam Long idProyeccion,
+                                                     @RequestParam Long idButaca,
+                                                     @RequestParam Double precio) {
+        if (precio <= 0) throw new RuntimeException("Precio inválido");
+        Entrada e = entradaService.comprarEntrada(idAsistente, idProyeccion, idButaca, precio);
+
+        try {
+            Entrada e = entradaService.comprarEntrada(idAsistente, idProyeccion, idButaca, precio);
+            return ResponseEntity.ok("Entrada comprada con éxito. ID: " + e.getIdEntrada());
+        } catch (RuntimeException ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
+
+        EntradaDTO dto = new EntradaDTO();
+        dto.setIdEntrada(e.getIdEntrada());
+        dto.setPrecio(e.getPrecio());
+        dto.setNombreAsistente(e.getAsistente().getNombre());
+        dto.setCancelada(e.getCancelada());
+        dto.setFila(e.getButaca().getFila());
+        dto.setNumeroButaca(e.getButaca().getNumero());
+
+        return ResponseEntity.ok(dto);
     }
 
     // ================== ASIENTOS LIBRES ============================

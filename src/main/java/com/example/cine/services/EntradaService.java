@@ -189,6 +189,12 @@ public class EntradaService {
             throw new RuntimeException("No se puede cancelar la entrada con menos de dos horas");
         }
 
+        // ==================== REGLA 2: Máximo 5 entradas por asistente ====================
+        List<Entrada> entradasAsistente = entradaRepository.findByAsistente_IdAsistente(idAsistente);
+        if (entradasAsistente.size() >= 5) {
+            throw new RuntimeException("El asistente ya tiene 5 entradas compradas, no puede comprar más");
+        }
+
         entrada.setCancelada(true);
         return entradaRepository.save(entrada);
     }

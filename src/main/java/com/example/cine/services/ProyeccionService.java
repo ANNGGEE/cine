@@ -57,13 +57,6 @@ public class ProyeccionService{
                 .orElseThrow(() -> new RuntimeException("Proyección no encontrada"));
     }
 
-    // ============= OBTENER POR PELICULA ================================
-    public List<Proyeccion> proyeccionPorPelicula(Long idPelicula){
-        Pelicula pelicula = peliculaRepository.findById(idPelicula)
-                .orElseThrow(() -> new RuntimeException("Película no encontrada"));
-        return proyeccionRepository.findByPelicula(pelicula);
-    }
-
     // ================== LISTAR POR SALA ===========================
     public List<Proyeccion> obtenerPorSala(Long idSala){
         Sala sala = salaRepository.findById(idSala)

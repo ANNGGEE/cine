@@ -39,122 +39,132 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) {
 
-        // Evitar duplicados al reiniciar
         if (salaRepository.count() > 0) return;
 
         // ==================== SALAS ====================
-        Sala sala1 = new Sala();
-        sala1.setNumero(1);
-        sala1.setDescripcion("Sala Principal");
-        sala1.setCapacidad(30);
-        salaRepository.save(sala1);
-
-        Sala sala2 = new Sala();
-        sala2.setNumero(2);
-        sala2.setDescripcion("Sala 3D");
-        sala2.setCapacidad(20);
-        salaRepository.save(sala2);
+        Sala sala1 = crearSala(1, "Sala Principal", 30);
+        Sala sala2 = crearSala(2, "Sala 3D", 20);
+        Sala sala3 = crearSala(3, "Sala VIP", 15);
 
         // ==================== BUTACAS ==================
-        crearButacas(sala1, 3, 10); // Filas A-C, 10 butacas por fila
-        crearButacas(sala2, 2, 10); // Filas A-B, 10 butacas por fila
+        crearButacas(sala1);
+        crearButacas(sala2);
+        crearButacas(sala3);
 
         // ==================== ASISTENTES ===============
-        Asistente a1 = new Asistente();
-        a1.setNombre("Juan Pérez");
-        asistenteRepository.save(a1);
+        String[] nombres = {
+                "Juan Pérez", "María Gómez", "Luis Fernández",
+                "Ana López", "Carlos Ruiz", "Sofía Martínez"
+        };
 
-        Asistente a2 = new Asistente();
-        a2.setNombre("María Gómez");
-        asistenteRepository.save(a2);
-
-        Asistente a3 = new Asistente();
-        a3.setNombre("Luis Fernández");
-        asistenteRepository.save(a3);
-
-        Asistente a4 = new Asistente();
-        a4.setNombre("Ana López");
-        asistenteRepository.save(a4);
-
-        // ==================== PELÍCULAS =================
-        Pelicula p1 = new Pelicula();
-        p1.setTitulo("Avengers: Endgame");
-        p1.setDuracion(180);
-        p1.setGenero("Acción");
-        peliculaRepository.save(p1);
-
-        Pelicula p2 = new Pelicula();
-        p2.setTitulo("Jurassic Park");
-        p2.setDuracion(127);
-        p2.setGenero("Aventura");
-        peliculaRepository.save(p2);
-
-        Pelicula p3 = new Pelicula();
-        p3.setTitulo("Titanic");
-        p3.setDuracion(195);
-        p3.setGenero("Drama");
-        peliculaRepository.save(p3);
-
-        // ==================== PROYECCIONES ===============
-        Proyeccion pr1 = new Proyeccion();
-        pr1.setFecha(LocalDate.now().plusDays(1));
-        pr1.setHorario(LocalTime.of(18, 0));
-        pr1.setSala(sala1);
-        pr1.setPelicula(p1);
-        proyeccionRepository.save(pr1);
-
-        Proyeccion pr2 = new Proyeccion();
-        pr2.setFecha(LocalDate.now().plusDays(1));
-        pr2.setHorario(LocalTime.of(21, 0));
-        pr2.setSala(sala1);
-        pr2.setPelicula(p1);
-        proyeccionRepository.save(pr2);
-
-        Proyeccion pr3 = new Proyeccion();
-        pr3.setFecha(LocalDate.now().plusDays(2));
-        pr3.setHorario(LocalTime.of(20, 0));
-        pr3.setSala(sala2);
-        pr3.setPelicula(p2);
-        proyeccionRepository.save(pr3);
-
-        Proyeccion pr4 = new Proyeccion();
-        pr4.setFecha(LocalDate.now().plusDays(3));
-        pr4.setHorario(LocalTime.of(19, 30));
-        pr4.setSala(sala2);
-        pr4.setPelicula(p3);
-        proyeccionRepository.save(pr4);
-
-        // ==================== ENTRADAS ===================
-        List<Butaca> butacasSala1 = butacaRepository.findBySala_IdSala(sala1.getIdSala());
-
-        // Proyección 1 → parcialmente ocupada
-        crearEntrada(a1, pr1, butacasSala1.get(0), false);
-        crearEntrada(a2, pr1, butacasSala1.get(1), false);
-        crearEntrada(a3, pr1, butacasSala1.get(2), true); // cancelada
-
-        // Proyección 2 → casi llena
-        for (int i = 0; i < 25; i++) {
-            crearEntrada(a4, pr2, butacasSala1.get(i), false);
+        for (String nombre : nombres) {
+            Asistente a = new Asistente();
+            a.setNombre(nombre);
+            asistenteRepository.save(a);
         }
 
-        System.out.println("✅ Datos de ejemplo cargados correctamente");
+        List<Asistente> asistentes = asistenteRepository.findAll();
+
+        // ==================== PELÍCULAS =================
+        Pelicula p1 = crearPelicula("Avengers: Endgame", 180, "Acción");
+        Pelicula p2 = crearPelicula("Jurassic Park", 127, "Aventura");
+        Pelicula p3 = crearPelicula("Titanic", 195, "Drama");
+        Pelicula p4 = crearPelicula("Inception", 148, "Ciencia Ficción");
+        Pelicula p5 = crearPelicula("Coco", 105, "Animación");
+
+        // ==================== PROYECCIONES =================
+
+        // 🔴 PASADAS (ni compra ni cancelación)
+        crearProyeccion(p1, sala1, LocalDate.now().minusDays(4), LocalTime.of(18, 0));
+        crearProyeccion(p2, sala2, LocalDate.now().minusDays(2), LocalTime.of(20, 0));
+
+        // 🟡 HOY (compra BLOQUEADA, cancelación BLOQUEADA)
+        crearProyeccion(p3, sala3, LocalDate.now(), LocalTime.of(16, 0));
+
+        // 🟢 FUTURAS (COMPRA y CANCELACIÓN PERMITIDAS)
+        crearProyeccion(p4, sala1, LocalDate.now().plusDays(1), LocalTime.of(22, 0));
+        crearProyeccion(p4, sala1, LocalDate.now().plusDays(2), LocalTime.of(21, 30));
+        crearProyeccion(p5, sala2, LocalDate.now().plusDays(3), LocalTime.of(20, 0));
+        crearProyeccion(p5, sala3, LocalDate.now().plusDays(4), LocalTime.of(19, 30));
+
+        // ==================== ENTRADAS ===================
+        List<Proyeccion> proyecciones = proyeccionRepository.findAll();
+
+        for (Proyeccion pr : proyecciones) {
+            List<Butaca> butacas =
+                    butacaRepository.findBySala_IdSala(pr.getSala().getIdSala());
+
+            // Vendemos 2 entradas por proyección
+            for (int i = 0; i < Math.min(2, butacas.size()); i++) {
+                crearEntrada(asistentes.get(i), pr, butacas.get(i), false);
+            }
+
+            // Una cancelada (para comprobar que vuelve a estar libre)
+            if (!butacas.isEmpty()) {
+                crearEntrada(
+                        asistentes.get(0),
+                        pr,
+                        butacas.get(butacas.size() - 1),
+                        true
+                );
+            }
+        }
+
+        System.out.println("✅ DataInitializer cargado correctamente (regla 2h respetada)");
     }
 
     // ==================== MÉTODOS AUXILIARES ====================
-    private void crearButacas(Sala sala, int filas, int porFila) {
-        for (char f = 'A'; f < 'A' + filas; f++) {
-            for (int i = 1; i <= porFila; i++) {
+
+    private Sala crearSala(int numero, String descripcion, int capacidad) {
+        Sala s = new Sala();
+        s.setNumero(numero);
+        s.setDescripcion(descripcion);
+        s.setCapacidad(capacidad);
+        return salaRepository.save(s);
+    }
+
+    private void crearButacas(Sala sala) {
+        int columnas = 10;
+        int filas = (int) Math.ceil((double) sala.getCapacidad() / columnas);
+        char fila = 'A';
+        int creadas = 0;
+
+        for (int f = 0; f < filas && creadas < sala.getCapacidad(); f++) {
+            for (int n = 1; n <= columnas && creadas < sala.getCapacidad(); n++) {
                 Butaca b = new Butaca();
                 b.setSala(sala);
-                b.setFila(String.valueOf(f));
-                b.setNumero(i);
-                b.setPosicion(f + String.valueOf(i));
+                b.setFila(String.valueOf(fila));
+                b.setNumero(n);
+                b.setPosicion(fila + String.valueOf(n));
                 butacaRepository.save(b);
+                creadas++;
             }
+            fila++;
         }
     }
 
-    private void crearEntrada(Asistente a, Proyeccion p, Butaca b, boolean cancelada) {
+    private Pelicula crearPelicula(String titulo, int duracion, String genero) {
+        Pelicula p = new Pelicula();
+        p.setTitulo(titulo);
+        p.setDuracion(duracion);
+        p.setGenero(genero);
+        return peliculaRepository.save(p);
+    }
+
+    private Proyeccion crearProyeccion(
+            Pelicula p, Sala s, LocalDate fecha, LocalTime horario
+    ) {
+        Proyeccion pr = new Proyeccion();
+        pr.setPelicula(p);
+        pr.setSala(s);
+        pr.setFecha(fecha);
+        pr.setHorario(horario);
+        return proyeccionRepository.save(pr);
+    }
+
+    private void crearEntrada(
+            Asistente a, Proyeccion p, Butaca b, boolean cancelada
+    ) {
         Entrada e = new Entrada();
         e.setAsistente(a);
         e.setProyeccion(p);

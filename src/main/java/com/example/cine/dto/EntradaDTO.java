@@ -19,4 +19,6 @@ public class EntradaDTO {
         private LocalTime horario;
         private Double precio;
         private Boolean cancelada;
+
+
 }

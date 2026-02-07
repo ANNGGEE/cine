@@ -16,13 +16,27 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProyeccionRepository extends JpaRepository<Proyeccion, Long>{
-    @Query("SELECT p FROM Proyeccion p JOIN FETCH p.sala JOIN FETCH p.pelicula")
+    @Query("""
+        SELECT p FROM Proyeccion p
+        LEFT JOIN FETCH p.sala
+        LEFT JOIN FETCH p.pelicula
+    """)
     List<Proyeccion> findAllWithSalaAndPelicula();
 
-    @Query("SELECT p FROM Proyeccion p JOIN FETCH p.sala JOIN FETCH p.pelicula WHERE p.idProyeccion = :id")
+    @Query("""
+        SELECT p FROM Proyeccion p
+        LEFT JOIN FETCH p.sala
+        LEFT JOIN FETCH p.pelicula
+        WHERE p.idProyeccion = :id
+    """)
     Optional<Proyeccion> findByIdWithSalaAndPelicula(@Param("id") Long id);
 
     List<Proyeccion> findBySala(Sala sala);
     Page<Proyeccion> findByFecha(LocalDate fecha, Pageable pageable);
     List<Proyeccion> findByPelicula(Pelicula pelicula);
+
+    List<Proyeccion> findByPeliculaIdPelicula(Long idPelicula);
+
+    @Query("SELECT p FROM Proyeccion p WHERE p.sala.idSala = :idSala")
+    List<Proyeccion> findBySalaId(@Param("idSala") Long idSala);
 }

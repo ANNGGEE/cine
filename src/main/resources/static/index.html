@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>🎬 Cine Pastel Completo</title>
+    <style>
+        body { font-family: "Segoe UI", sans-serif; background:#f7f8fc; padding:20px; color:#333; }
+        h1,h2 { text-align:center; color:#6c63ff; }
+        h2 { margin-top:30px; color:#5f5dbb; }
+        .card { background:#fff; padding:16px; border-radius:12px; margin-bottom:16px; box-shadow:0 8px 20px rgba(0,0,0,0.05); }
+        button { background:#a5b4fc; color:white; border:none; padding:8px 14px; border-radius:8px; cursor:pointer; }
+        button:disabled { background:#e5e7eb; color:#999; cursor:not-allowed; }
+        .ok { color:#16a34a; font-weight:bold; }
+        .bad { color:#dc2626; font-weight:bold; }
+        .butacas { display:grid; grid-template-columns:repeat(10,40px); gap:6px; margin-top:10px; }
+        .butaca { width:40px; height:40px; border-radius:6px; text-align:center; line-height:40px; cursor:pointer; font-size:12px; }
+        .libre { background:#bbf7d0; }
+        .ocupada { background:#fecaca; cursor:not-allowed; }
+        .seleccionada { background:#60a5fa; color:white; }
+    </style>
+</head>
+<body>
+
+<h1>🎟️ Sistema de Gestión de Cine</h1>
+
+<h2>👤 Asistentes</h2>
+<div class="card">
+    <button onclick="cargarAsistentes()">Listar asistentes</button>
+    <div id="asistentes"></div>
+</div>
+
+<h2>🎬 Proyecciones</h2>
+<div class="card">
+    <button onclick="cargarProyecciones()">Listar proyecciones</button>
+    <div id="proyecciones"></div>
+</div>
+
+<h2>🪑 Selección de butaca</h2>
+<div class="card">
+    <input type="number" id="idProyeccion" placeholder="ID Proyección">
+    <button onclick="cargarButacas()">Ver butacas</button>
+    <div id="butacas" class="butacas"></div>
+</div>
+
+<h2>🛒 Comprar entrada</h2>
+<div class="card">
+    <input type="number" id="idAsistente" placeholder="ID Asistente">
+    <button id="btnComprar" onclick="comprarEntrada()" disabled>Comprar</button>
+    <p id="mensajeCompra"></p>
+</div>
+
+<h2>❌ Cancelar entrada</h2>
+<div class="card">
+    <input type="number" id="idEntrada" placeholder="ID Entrada">
+    <button onclick="cancelarEntrada()">Cancelar</button>
+    <p id="mensajeCancelacion"></p>
+</div>
+
+<script>
+    let butacaSeleccionada = null;
+    let proyeccionComprable = false;
+    let entradasAsistente = 0;
+
+    function cargarAsistentes() {
+        fetch("/asistentes")
+            .then(r => r.json())
+            .then(data => {
+                const div = document.getElementById("asistentes");
+                div.innerHTML = "";
+                data.forEach(a => {
+                    div.innerHTML += `<div>👤 ${a.nombre} (ID ${a.idAsistente}) → Entradas: ${a.totalEntradas || 0}</div>`;
+                });
+            });
+    }
+
+    function cargarProyecciones() {
+        fetch("/proyecciones")
+            .then(r => r.json())
+            .then(data => {
+                const div = document.getElementById("proyecciones");
+                div.innerHTML = "";
+                const ahora = new Date();
+
+                data.forEach(p => {
+                    const fechaHora = new Date(p.fecha + "T" + p.horario);
+                    const comprable = fechaHora > ahora;
+                    div.innerHTML += `
+                        <div class="card">
+                            <strong>${p.peliculaTitulo}</strong><br>
+                            Sala: ${p.salaNombre}<br>
+                            Fecha: ${p.fecha} ${p.horario}<br>
+                            Compra:
+                            <span class="${comprable ? 'ok' : 'bad'}">
+                                ${comprable ? 'PERMITIDA' : 'BLOQUEADA'}
+                            </span><br>
+                            📊 Ocupación: ${p.ocupacion || 0}%<br>
+                            ID Proyección: ${p.idProyeccion}
+                        </div>
+                    `;
+                });
+            });
+    }
+
+    function cargarButacas() {
+        const id = document.getElementById("idProyeccion").value;
+        butacaSeleccionada = null;
+        document.getElementById("btnComprar").disabled = true;
+
+        fetch(`/entradas/libres?idProyeccion=${id}`)
+            .then(r => r.json())
+            .then(libres => {
+                const contenedor = document.getElementById("butacas");
+                contenedor.innerHTML = "";
+
+                libres.forEach(b => {
+                    const div = document.createElement("div");
+                    div.className = "butaca libre";
+                    div.innerText = b.posicion;
+                    div.onclick = () => {
+                        document.querySelectorAll(".butaca").forEach(x => x.classList.remove("seleccionada"));
+                        div.classList.add("seleccionada");
+                        butacaSeleccionada = b.idButaca;
+                        validarCompra();
+                    };
+                    contenedor.appendChild(div);
+                });
+
+                // Revisar si la proyección es comprable
+                fetch(`/proyecciones/${id}`)
+                    .then(r => r.json())
+                    .then(p => {
+                        const fechaHora = new Date(p.fecha + "T" + p.horario);
+                        proyeccionComprable = fechaHora > new Date();
+                        validarCompra();
+                    });
+            });
+    }
+
+    function validarCompra() {
+        const idAsistente = document.getElementById("idAsistente").value;
+        if (!idAsistente) return;
+        fetch(`/entradas/porAsistente?idAsistente=${idAsistente}`)
+            .then(r => r.json())
+            .then(e => {
+                entradasAsistente = e.length;
+                const btn = document.getElementById("btnComprar");
+                btn.disabled = !proyeccionComprable || !butacaSeleccionada || entradasAsistente >= 5;
+            });
+    }
+
+    function comprarEntrada() {
+        const asistente = document.getElementById("idAsistente").value;
+        const proyeccion = document.getElementById("idProyeccion").value;
+
+        fetch(`/entradas?idAsistente=${asistente}&idProyeccion=${proyeccion}&idButaca=${butacaSeleccionada}&precio=8.5`,
+            { method: "POST" })
+            .then(r => r.text())
+            .then(msg => {
+                document.getElementById("mensajeCompra").innerText = msg;
+                cargarAsistentes(); // actualizar número de entradas
+                validarCompra();
+            })
+            .catch(err => document.getElementById("mensajeCompra").innerText = err);
+    }
+
+    function cancelarEntrada() {
+        const idEntrada = document.getElementById("idEntrada").value;
+        fetch(`/entradas/cancelar?idEntrada=${idEntrada}`, { method: "POST" })
+            .then(r => r.text())
+            .then(msg => document.getElementById("mensajeCancelacion").innerText = msg)
+            .catch(err => document.getElementById("mensajeCancelacion").innerText = err);
+    }
+</script>
+
+</body>
+</html>
