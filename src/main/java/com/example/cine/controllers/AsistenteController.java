@@ -17,25 +17,25 @@ public class AsistenteController {
         this.asistenteService = asistenteService;
     }
 
-    // CREAR ASISTENTE
+    // ================= CREAR ASISTENTE ===========================
     @PostMapping("/crear")
     public ResponseEntity<Asistente> crearAsistente(@RequestBody Asistente asistente){
         return ResponseEntity.ok(asistenteService.crearAsistente(asistente));
     }
 
-    // OBTENER TODOS LOS ASISTENTES (DTO)
+    // =================== OBTENER TODOS LOS ASISTENTES (DTO) ======================================
     @GetMapping
     public ResponseEntity<List<AsistenteDTO>> obtenerTodos(){
         return ResponseEntity.ok(asistenteService.obtenerTodosDTO());
     }
 
-    // OBTENER POR ID (DTO)
+    // ============================ OBTENER POR ID (DTO) ==============================
     @GetMapping("/{id}")
     public ResponseEntity<AsistenteDTO> obtenerPorId(@PathVariable Long id) {
         return ResponseEntity.ok(asistenteService.obtenerPorIdDTO(id));
     }
 
-    // ACTUALIZAR ASISTENTE
+    // ================================ ACTUALIZAR ASISTENTE ===========================================
     @PutMapping("/{id}")
     public ResponseEntity<Asistente> actualizarAsistente(
             @PathVariable Long id,
@@ -44,7 +44,7 @@ public class AsistenteController {
         return ResponseEntity.ok(asistenteService.actualizarAsistente(id, asistente));
     }
 
-    // ELIMINAR ASISTENTE
+    // ================================== ELIMINAR ASISTENTE ==============================
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminarAsistente(@PathVariable Long id) {
         asistenteService.eliminarAsistente(id);

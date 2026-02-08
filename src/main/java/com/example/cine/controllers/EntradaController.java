@@ -40,7 +40,7 @@ public class EntradaController {
             return ResponseEntity.ok(dto);
 
         } catch (RuntimeException ex) {
-            return ResponseEntity.badRequest().body(null); // o lanzar un DTO con mensaje de error
+            return ResponseEntity.badRequest().body(null);
         }
     }
 

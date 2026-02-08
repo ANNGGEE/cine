@@ -148,7 +148,7 @@ public class EntradaService {
     }
 
     // ================================ ASIENTOS LIBRES ==============================
-// Obtenemos los asientos libres de una sala para una proyección
+    // Obtenemos los asientos libres de una sala para una proyección
     @Transactional(readOnly = true)
     public List<Butaca> asientosLibres(Long idProyeccion) {
         Proyeccion proyeccion = proyeccionRepository.findById(idProyeccion)
@@ -164,7 +164,7 @@ public class EntradaService {
     }
 
     // =========================== CANCELAR ENTRADA =================================
-// Cancelamos la entrada
+    // Cancelamos la entrada
     public Entrada cancelarEntrada(Long idEntrada) {
         Entrada entrada = entradaRepository.findById(idEntrada)
                 .orElseThrow(() -> new RuntimeException("Entrada no encontrada"));
@@ -194,7 +194,7 @@ public class EntradaService {
                 .toList();
     }
 
-// =================== ENTRADAS POR CLIENTE ================================
+    // =================== ENTRADAS POR CLIENTE ================================
 
     public List<Entrada> entradasPorAsistente(Long idAsistente) {
         Asistente asistente = asistenteRepository.findById(idAsistente)

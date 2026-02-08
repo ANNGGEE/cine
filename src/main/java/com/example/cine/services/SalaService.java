@@ -22,6 +22,7 @@ public class SalaService {
         this.entradaRepository = entradaRepository;
     }
 
+    // =================== CREAMOS SALA ======================
     public Sala crearSala(Sala sala) {
         // Creamos lista de butacas
         List<Butaca> listaButacas = new ArrayList<>();
@@ -48,6 +49,7 @@ public class SalaService {
         return salaRepository.save(sala); // Guarda Sala + Butacas
     }
 
+    // ======================= MOSTRAMOS BUTACAS POR PROYECCIÓN ==========================
     public void mostrarButacasDeProyeccion(Proyeccion proyeccion) {
 
         Sala sala = proyeccion.getSala();
@@ -72,10 +74,12 @@ public class SalaService {
         System.out.println("------------------------------------------------");
     }
 
+    // =================== OBTENEMOS TODAS LAS SALAS ============================
     public List<Sala> obtenerTodas() {
         return salaRepository.findAll();
     }
 
+    // ================= OBTENEMOS SALAS POR ID ==========================
     public Sala obtenerPorId(Long idSala) {
         return salaRepository.findById(idSala)
                 .orElseThrow(() -> new RuntimeException("Sala no encontrada"));
