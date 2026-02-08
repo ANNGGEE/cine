@@ -2,22 +2,21 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Cine App - Pruebas API</title>
+    <title>Prueba Cine - Todos los Endpoints</title>
     <style>
-        body { font-family: Arial, sans-serif; background: #fff8f0; margin: 0; }
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #fff8f0; }
         h1 { text-align: center; padding: 20px; color: #4a3f35; }
         .tabs { display: flex; background: #ffd6ba; }
-        .tab {
-            flex: 1; padding: 15px; text-align: center;
-            cursor: pointer; font-weight: bold;
-        }
+        .tab { flex: 1; padding: 15px; text-align: center; cursor: pointer; font-weight: bold; color: #4a3f35; transition: background 0.3s; }
+        .tab:hover { background: #ffc4a3; }
         .tab.active { background: #ffa980; color: white; }
-        .content { display: none; padding: 20px; }
+        .content { display: none; padding: 20px; background: #fff3e0; }
         .content.active { display: block; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { border: 1px solid #ccc; padding: 8px; }
+        table { border-collapse: collapse; width: 100%; margin-top: 10px; background: #fff8f0; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
         th { background: #ffd6ba; }
-        button { padding: 6px 12px; background: #ffa980; border: none; color: white; cursor: pointer; }
+        input, select, button { margin: 5px 0; padding: 5px; }
+        button { background: #ffa980; border: none; color: white; cursor: pointer; transition: background 0.3s; }
         button:hover { background: #ff7a50; }
         .success { color: green; font-weight: bold; }
         .error { color: red; font-weight: bold; }
@@ -25,171 +24,292 @@
 </head>
 <body>
 
-<h1>🎬 Cine App – Pruebas API</h1>
+<h1>Prueba Cine - Todos los Endpoints</h1>
 
 <div class="tabs">
     <div class="tab active" onclick="abrirTab(0)">Asistentes</div>
     <div class="tab" onclick="abrirTab(1)">Películas</div>
     <div class="tab" onclick="abrirTab(2)">Salas</div>
     <div class="tab" onclick="abrirTab(3)">Proyecciones</div>
-    <div class="tab" onclick="abrirTab(4)">Comprar Entrada</div>
+    <div class="tab" onclick="abrirTab(4)">Entradas</div>
+    <div class="tab" onclick="abrirTab(5)">Asientos Libres</div>
+    <div class="tab" onclick="abrirTab(6)">Entradas de Asistente</div>
 </div>
 
+<!-- ===================== Asistentes ===================== -->
 <div class="content active">
     <h2>Asistentes</h2>
-    <button onclick="listarAsistentes()">Listar</button>
-    <table>
+    <input type="text" id="inputNombreAsistente" placeholder="Nombre">
+    <button onclick="agregarAsistente()">Añadir Asistente</button>
+    <button onclick="listarAsistentes()">Listar Todos</button>
+    <div id="mensajeAsistente"></div>
+    <table id="tablaAsistentes">
         <thead><tr><th>ID</th><th>Nombre</th></tr></thead>
-        <tbody id="asistentes"></tbody>
+        <tbody></tbody>
     </table>
 </div>
 
+<!-- ===================== Películas ===================== -->
 <div class="content">
     <h2>Películas</h2>
-    <button onclick="listarPeliculas()">Listar</button>
-    <table>
-        <thead><tr><th>ID</th><th>Título</th><th>Género</th></tr></thead>
-        <tbody id="peliculas"></tbody>
+    <input type="text" id="inputNombrePelicula" placeholder="Nombre">
+    <button onclick="agregarPelicula()">Añadir Película</button>
+    <button onclick="listarPeliculas()">Listar Todas</button>
+    <div id="mensajePelicula"></div>
+    <table id="tablaPeliculas">
+        <thead><tr><th>ID</th><th>Nombre</th></tr></thead>
+        <tbody></tbody>
     </table>
 </div>
 
+<!-- ===================== Salas ===================== -->
 <div class="content">
     <h2>Salas</h2>
-    <button onclick="listarSalas()">Listar</button>
-    <table>
-        <thead><tr><th>ID</th><th>Número</th><th>Capacidad</th></tr></thead>
-        <tbody id="salas"></tbody>
+    <input type="text" id="inputDescripcionSala" placeholder="Descripción">
+    <input type="number" id="inputNumButacas" placeholder="Num. Butacas">
+    <button onclick="agregarSala()">Añadir Sala</button>
+    <button onclick="listarSalas()">Listar Todas</button>
+    <div id="mensajeSala"></div>
+    <table id="tablaSalas">
+        <thead><tr><th>ID</th><th>Descripción</th><th># Butacas</th></tr></thead>
+        <tbody></tbody>
     </table>
 </div>
 
+<!-- ===================== Proyecciones ===================== -->
 <div class="content">
     <h2>Proyecciones</h2>
-    <button onclick="listarProyecciones()">Listar</button>
-    <table>
-        <thead>
-        <tr><th>ID</th><th>Película</th><th>Sala</th><th>Fecha</th><th>Hora</th></tr>
-        </thead>
-        <tbody id="proyecciones"></tbody>
+    <label>Película:
+        <select id="selectPeliculaProyeccion"></select>
+    </label>
+    <label>Sala:
+        <select id="selectSalaProyeccion"></select>
+    </label>
+    <input type="date" id="inputFecha">
+    <input type="time" id="inputHorario">
+    <button onclick="agregarProyeccion()">Añadir Proyección</button>
+    <button onclick="listarProyecciones()">Listar Todas</button>
+    <div id="mensajeProyeccion"></div>
+    <table id="tablaProyecciones">
+        <thead><tr><th>ID</th><th>Película</th><th>Sala</th><th>Fecha</th><th>Horario</th></tr></thead>
+        <tbody></tbody>
     </table>
 </div>
 
+<!-- ===================== Entradas ===================== -->
 <div class="content">
     <h2>Comprar Entrada</h2>
-
-    <label>Asistente ID:
-        <input type="number" id="asistenteId">
-    </label><br><br>
-
+    <label>Asistente:
+        <select id="selectAsistente"></select>
+    </label><br>
     <label>Proyección:
-        <select id="proyeccionSelect" onchange="cargarButacas()"></select>
-    </label><br><br>
-
+        <select id="selectProyeccionEntrada" onchange="cargarAsientosLibres()"></select>
+    </label><br>
     <label>Butaca:
-        <select id="butacaSelect"></select>
-    </label><br><br>
-
+        <select id="selectButaca"></select>
+    </label><br>
     <label>Precio:
-        <input type="number" id="precio" value="8.5" step="0.5">
-    </label><br><br>
+        <input type="number" id="inputPrecio" step="0.1" value="10">
+    </label><br>
+    <button onclick="comprarEntrada()">Comprar Entrada</button>
+    <div id="mensajeEntrada"></div>
+</div>
 
-    <button onclick="comprarEntrada()">Comprar</button>
-    <p id="mensaje"></p>
+<!-- ===================== Asientos Libres ===================== -->
+<div class="content">
+    <h2>Asientos Libres por Proyección</h2>
+    <label>Proyección ID: <input type="number" id="inputProyeccionId"></label>
+    <button onclick="mostrarAsientosLibres()">Mostrar libres</button>
+    <table id="tablaAsientosLibres">
+        <thead><tr><th>ID Butaca</th><th>Fila</th><th>Número</th></tr></thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<!-- ===================== Entradas de Asistente ===================== -->
+<div class="content">
+    <h2>Entradas de un Asistente</h2>
+    <label>Asistente ID: <input type="number" id="inputAsistenteEntradas"></label>
+    <button onclick="listarEntradasAsistente()">Listar</button>
+    <table id="tablaEntradasAsistente">
+        <thead><tr><th>ID Entrada</th><th>Precio</th><th>Fila</th><th>Butaca</th><th>Cancelada</th></tr></thead>
+        <tbody></tbody>
+    </table>
 </div>
 
 <script>
-    const api = "http://localhost:8080";
+    const apiBase = "http://localhost:8080";
 
-    function abrirTab(i) {
-        document.querySelectorAll(".tab").forEach((t,idx)=>t.classList.toggle("active", idx===i));
-        document.querySelectorAll(".content").forEach((c,idx)=>c.classList.toggle("active", idx===i));
+    // ===================== Control de pestañas =====================
+    function abrirTab(index) {
+        document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', i === index));
+        document.querySelectorAll('.content').forEach((c, i) => c.classList.toggle('active', i === index));
     }
 
+    // ===================== Asistentes =====================
     function listarAsistentes() {
-        fetch(`${api}/asistentes`)
-            .then(r=>r.json())
-            .then(data=>{
-                document.getElementById("asistentes").innerHTML =
-                    data.map(a=>`<tr><td>${a.idAsistente}</td><td>${a.nombre}</td></tr>`).join("");
+        fetch(`${apiBase}/asistentes`).then(r => r.json()).then(data => {
+            const tbody = document.querySelector("#tablaAsistentes tbody");
+            const select = document.getElementById("selectAsistente");
+            tbody.innerHTML = ""; select.innerHTML = "";
+            data.forEach(a => {
+                tbody.innerHTML += `<tr><td>${a.idAsistente}</td><td>${a.nombre}</td></tr>`;
+                select.innerHTML += `<option value="${a.idAsistente}">${a.nombre}</option>`;
             });
+        });
     }
 
+    function agregarAsistente() {
+        const nombre = document.getElementById("inputNombreAsistente").value;
+        if (!nombre) return alert("Nombre obligatorio");
+        fetch(`${apiBase}/asistentes?nombre=${nombre}`, { method: "POST" })
+        .then(r => r.json()).then(() => {
+            document.getElementById("inputNombreAsistente").value="";
+            listarAsistentes();
+        });
+    }
+
+    // ===================== Películas =====================
     function listarPeliculas() {
-        fetch(`${api}/peliculas`)
-            .then(r=>r.json())
-            .then(data=>{
-                document.getElementById("peliculas").innerHTML =
-                    data.map(p=>`<tr><td>${p.idPelicula}</td><td>${p.titulo}</td><td>${p.genero}</td></tr>`).join("");
+        fetch(`${apiBase}/peliculas`).then(r => r.json()).then(data => {
+            const tbody = document.querySelector("#tablaPeliculas tbody");
+            const select = document.getElementById("selectPeliculaProyeccion");
+            tbody.innerHTML = ""; select.innerHTML = "";
+            data.forEach(p => {
+                tbody.innerHTML += `<tr><td>${p.idPelicula}</td><td>${p.nombre}</td></tr>`;
+                select.innerHTML += `<option value="${p.idPelicula}">${p.nombre}</option>`;
             });
+        });
     }
 
+    function agregarPelicula() {
+        const nombre = document.getElementById("inputNombrePelicula").value;
+        if (!nombre) return alert("Nombre obligatorio");
+        fetch(`${apiBase}/peliculas?nombre=${nombre}`, { method: "POST" })
+        .then(r => r.json()).then(() => {
+            document.getElementById("inputNombrePelicula").value="";
+            listarPeliculas();
+        });
+    }
+
+    // ===================== Salas =====================
     function listarSalas() {
-        fetch(`${api}/salas`)
-            .then(r=>r.json())
-            .then(data=>{
-                document.getElementById("salas").innerHTML =
-                    data.map(s=>`<tr><td>${s.idSala}</td><td>${s.numero}</td><td>${s.capacidad}</td></tr>`).join("");
+        fetch(`${apiBase}/salas`).then(r => r.json()).then(data => {
+            const tbody = document.querySelector("#tablaSalas tbody");
+            const select = document.getElementById("selectSalaProyeccion");
+            tbody.innerHTML = ""; select.innerHTML = "";
+            data.forEach(s => {
+                tbody.innerHTML += `<tr><td>${s.idSala}</td><td>${s.descripcion}</td><td>${s.numButacas}</td></tr>`;
+                select.innerHTML += `<option value="${s.idSala}">${s.descripcion}</option>`;
             });
+        });
     }
 
+    function agregarSala() {
+        const descripcion = document.getElementById("inputDescripcionSala").value;
+        const numButacas = document.getElementById("inputNumButacas").value;
+        if (!descripcion || !numButacas) return alert("Todos los campos obligatorios");
+        fetch(`${apiBase}/salas?descripcion=${descripcion}&numButacas=${numButacas}`, { method: "POST" })
+        .then(r => r.json()).then(() => {
+            document.getElementById("inputDescripcionSala").value="";
+            document.getElementById("inputNumButacas").value="";
+            listarSalas();
+        });
+    }
+
+    // ===================== Proyecciones =====================
     function listarProyecciones() {
-        fetch(`${api}/proyecciones`)
-            .then(r=>r.json())
-            .then(data=>{
-                document.getElementById("proyecciones").innerHTML =
-                    data.map(p=>`
-                        <tr>
-                            <td>${p.idProyeccion}</td>
-                            <td>${p.pelicula.titulo}</td>
-                            <td>Sala ${p.sala.numero}</td>
-                            <td>${p.fecha}</td>
-                            <td>${p.horario}</td>
-                        </tr>`).join("");
-
-                document.getElementById("proyeccionSelect").innerHTML =
-                    data.map(p=>`
-                        <option value="${p.idProyeccion}">
-                            ${p.pelicula.titulo} (${p.fecha} ${p.horario})
-                        </option>`).join("");
-
-                cargarButacas();
+        fetch(`${apiBase}/proyecciones`).then(r => r.json()).then(data => {
+            const tbody = document.querySelector("#tablaProyecciones tbody");
+            const select = document.getElementById("selectProyeccionEntrada");
+            tbody.innerHTML = ""; select.innerHTML = "";
+            data.forEach(p => {
+                const pelicula = p.pelicula?.nombre || "N/A";
+                const sala = p.sala?.descripcion || "N/A";
+                tbody.innerHTML += `<tr><td>${p.idProyeccion}</td><td>${pelicula}</td><td>${sala}</td><td>${p.fecha}</td><td>${p.horario}</td></tr>`;
+                select.innerHTML += `<option value="${p.idProyeccion}">${pelicula} (${p.fecha} ${p.horario})</option>`;
             });
+            cargarAsientosLibres();
+        });
     }
 
-    function cargarButacas() {
-        const id = document.getElementById("proyeccionSelect").value;
-        fetch(`${api}/entradas/libres?idProyeccion=${id}`)
-            .then(r=>r.json())
-            .then(data=>{
-                document.getElementById("butacaSelect").innerHTML =
-                    data.map(b=>`<option value="${b.idButaca}">${b.posicion}</option>`).join("");
+    function agregarProyeccion() {
+        const idPelicula = document.getElementById("selectPeliculaProyeccion").value;
+        const idSala = document.getElementById("selectSalaProyeccion").value;
+        const fecha = document.getElementById("inputFecha").value;
+        const horario = document.getElementById("inputHorario").value;
+        if (!idPelicula || !idSala || !fecha || !horario) return alert("Todos los campos obligatorios");
+        fetch(`${apiBase}/proyecciones?idPelicula=${idPelicula}&idSala=${idSala}&fecha=${fecha}&horario=${horario}`, { method: "POST" })
+        .then(r => r.json()).then(() => {
+            listarProyecciones();
+        });
+    }
+
+    // ===================== Entradas =====================
+    function cargarAsientosLibres() {
+        const idProyeccion = document.getElementById("selectProyeccionEntrada").value;
+        if (!idProyeccion) return;
+        fetch(`${apiBase}/entradas/libres?idProyeccion=${idProyeccion}`)
+            .then(r => r.json())
+            .then(data => {
+                const select = document.getElementById("selectButaca");
+                select.innerHTML = "";
+                data.forEach(b => select.innerHTML += `<option value="${b.idButaca}">Fila ${b.fila} - Nº ${b.numero}</option>`);
             });
     }
 
     function comprarEntrada() {
-        const a = asistenteId.value;
-        const p = proyeccionSelect.value;
-        const b = butacaSelect.value;
-        const pr = precio.value;
-
-        fetch(`${api}/entradas/comprar?idAsistente=${a}&idProyeccion=${p}&idButaca=${b}&precio=${pr}`, {
-            method:"POST"
-        })
-        .then(r=>{
-            if(!r.ok) throw new Error();
-            return r.json();
-        })
-        .then(()=>{
-            mensaje.textContent = "✅ Entrada comprada";
-            mensaje.className = "success";
-            cargarButacas();
-        })
-        .catch(()=>{
-            mensaje.textContent = "❌ No se pudo comprar (regla de negocio)";
-            mensaje.className = "error";
-        });
+        const idAsistente = document.getElementById("selectAsistente").value;
+        const idProyeccion = document.getElementById("selectProyeccionEntrada").value;
+        const idButaca = document.getElementById("selectButaca").value;
+        const precio = document.getElementById("inputPrecio").value;
+        const mensaje = document.getElementById("mensajeEntrada");
+        mensaje.textContent = "";
+        if (!idAsistente || !idProyeccion || !idButaca || !precio) {
+            mensaje.textContent = "Todos los campos son obligatorios."; mensaje.className='error'; return;
+        }
+        fetch(`${apiBase}/entradas/entradas?idAsistente=${idAsistente}&idProyeccion=${idProyeccion}&idButaca=${idButaca}&precio=${precio}`, { method:"POST" })
+        .then(res => { if(!res.ok) throw new Error(); return res.json(); })
+        .then(data => {
+            mensaje.textContent = `Entrada comprada con éxito: ID ${data.idEntrada}`;
+            mensaje.className = 'success';
+            cargarAsientosLibres();
+        }).catch(()=>{ mensaje.textContent="Error al comprar entrada"; mensaje.className='error'; });
     }
 
-    window.onload = listarProyecciones;
+    // ===================== Asientos Libres =====================
+    function mostrarAsientosLibres() {
+        const idProyeccion = document.getElementById("inputProyeccionId").value;
+        if (!idProyeccion) return;
+        fetch(`${apiBase}/entradas/libres?idProyeccion=${idProyeccion}`)
+            .then(r => r.json())
+            .then(data => {
+                const tbody = document.querySelector("#tablaAsientosLibres tbody");
+                tbody.innerHTML = "";
+                data.forEach(b => tbody.innerHTML += `<tr><td>${b.idButaca}</td><td>${b.fila}</td><td>${b.numero}</td></tr>`);
+            });
+    }
+
+    // ===================== Entradas de Asistente =====================
+    function listarEntradasAsistente() {
+        const idAsistente = document.getElementById("inputAsistenteEntradas").value;
+        if (!idAsistente) return;
+        fetch(`${apiBase}/entradas/asistente/${idAsistente}`)
+            .then(r => r.json())
+            .then(data => {
+                const tbody = document.querySelector("#tablaEntradasAsistente tbody");
+                tbody.innerHTML = "";
+                data.forEach(e => tbody.innerHTML += `<tr><td>${e.idEntrada}</td><td>${e.precio}</td><td>${e.fila}</td><td>${e.numeroButaca}</td><td>${e.cancelada}</td></tr>`);
+            });
+    }
+
+    // ===================== Inicialización =====================
+    window.onload = () => {
+        listarAsistentes();
+        listarPeliculas();
+        listarSalas();
+        listarProyecciones();
+    };
 </script>
 
 </body>
