@@ -6,7 +6,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -74,44 +73,34 @@ public class DataInitializer implements CommandLineRunner {
         Pelicula p5 = crearPelicula("Coco", 105, "Animación");
 
         // ==================== PROYECCIONES =================
-
-        // 🔴 PASADAS (NO compra / NO cancelación)
-        crearProyeccion(p1, sala1, LocalDate.now().minusDays(5), LocalTime.of(18, 0));
-        crearProyeccion(p2, sala2, LocalDate.now().minusDays(2), LocalTime.of(20, 0));
-
-        // 🟡 HOY (menos de 2h → compra NO / cancelación NO)
-        crearProyeccion(p3, sala3, LocalDate.now(), LocalTime.now().minusHours(1));
-
-        // 🟢 FUTURAS (compra y cancelación OK)
-        crearProyeccion(p4, sala1, LocalDate.now().plusDays(1), LocalTime.of(21, 30));
-        crearProyeccion(p4, sala1, LocalDate.now().plusDays(2), LocalTime.of(22, 0));
-        crearProyeccion(p5, sala2, LocalDate.now().plusDays(3), LocalTime.of(19, 0));
-        crearProyeccion(p5, sala3, LocalDate.now().plusDays(4), LocalTime.of(20, 30));
+        // Todas FUTURAS
+        crearProyeccion(p1, sala1, LocalDate.now().plusDays(1), LocalTime.of(18, 0));
+        crearProyeccion(p1, sala1, LocalDate.now().plusDays(2), LocalTime.of(21, 0));
+        crearProyeccion(p2, sala2, LocalDate.now().plusDays(3), LocalTime.of(20, 0));
+        crearProyeccion(p3, sala3, LocalDate.now().plusDays(4), LocalTime.of(19, 30));
+        crearProyeccion(p4, sala1, LocalDate.now().plusDays(5), LocalTime.of(21, 30));
+        crearProyeccion(p4, sala1, LocalDate.now().plusDays(6), LocalTime.of(22, 0));
+        crearProyeccion(p5, sala2, LocalDate.now().plusDays(7), LocalTime.of(19, 0));
+        crearProyeccion(p5, sala3, LocalDate.now().plusDays(8), LocalTime.of(20, 30));
 
         // ==================== ENTRADAS ===================
         List<Proyeccion> proyecciones = proyeccionRepository.findAll();
 
         for (Proyeccion pr : proyecciones) {
-            List<Butaca> butacas =
-                    butacaRepository.findBySala_IdSala(pr.getSala().getIdSala());
+            List<Butaca> butacas = butacaRepository.findBySala_IdSala(pr.getSala().getIdSala());
 
             // 2 entradas activas
             for (int i = 0; i < Math.min(2, butacas.size()); i++) {
                 crearEntrada(asistentes.get(i), pr, butacas.get(i), false);
             }
 
-            // 1 cancelada
+            // 1 entrada cancelada
             if (!butacas.isEmpty()) {
-                crearEntrada(
-                        asistentes.get(0),
-                        pr,
-                        butacas.get(butacas.size() - 1),
-                        true
-                );
+                crearEntrada(asistentes.get(0), pr, butacas.get(butacas.size() - 1), true);
             }
         }
 
-        System.out.println("✅ DataInitializer COMPLETO cargado correctamente");
+        System.out.println("✅ DataInitializer COMPLETO cargado correctamente con proyecciones FUTURAS");
     }
 
     // ==================== MÉTODOS AUXILIARES ====================
@@ -151,9 +140,7 @@ public class DataInitializer implements CommandLineRunner {
         return peliculaRepository.save(p);
     }
 
-    private Proyeccion crearProyeccion(
-            Pelicula p, Sala s, LocalDate fecha, LocalTime horario
-    ) {
+    private Proyeccion crearProyeccion(Pelicula p, Sala s, LocalDate fecha, LocalTime horario) {
         Proyeccion pr = new Proyeccion();
         pr.setPelicula(p);
         pr.setSala(s);
@@ -162,15 +149,13 @@ public class DataInitializer implements CommandLineRunner {
         return proyeccionRepository.save(pr);
     }
 
-    private void crearEntrada(
-            Asistente a, Proyeccion p, Butaca b, boolean cancelada
-    ) {
+    private void crearEntrada(Asistente a, Proyeccion p, Butaca b, boolean cancelada) {
         Entrada e = new Entrada();
         e.setAsistente(a);
         e.setProyeccion(p);
         e.setButaca(b);
         e.setPrecio(8.5);
-        e.setFechacompra(LocalDateTime.now());
+        e.setFechacompra(java.time.LocalDateTime.now());
         e.setCancelada(cancelada);
         entradaRepository.save(e);
     }
