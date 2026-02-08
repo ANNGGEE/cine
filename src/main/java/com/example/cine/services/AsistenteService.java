@@ -2,6 +2,7 @@ package com.example.cine.services;
 
 import com.example.cine.entity.Asistente;
 import com.example.cine.repositories.AsistenteRepository;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,6 +29,7 @@ public class AsistenteService {
         return asistenteRepository.save(asistente);
     }
 
+    @Transactional(readOnly = true)
     // OBTENER TODOS LOS ASISTENTES
     public List<AsistenteDTO> obtenerTodosDTO() {
         return asistenteRepository.findAll()

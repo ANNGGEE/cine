@@ -20,8 +20,19 @@ public class Pelicula {
     private Integer duracion;
     private String genero;
 
-    @OneToMany(mappedBy = "pelicula", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "pelicula", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Proyeccion> proyecciones;
+
+    @Override
+    public String toString() {
+        return "Pelicula{" +
+                "id=" + idPelicula +
+                ", titulo='" + titulo + '\'' +
+                ", genero='" + genero + '\'' +
+                ", duracion=" + duracion +
+                // No incluir proyecciones
+                '}';
+    }
 
 //}
     public Long getIdPelicula() {

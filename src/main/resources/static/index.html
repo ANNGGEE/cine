@@ -1,159 +1,236 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8" />
-    <title>Sistema de Gestión de Cine</title>
+    <meta charset="UTF-8">
+    <title>Prueba Cine - Todos los Endpoints</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        h2 { color: #5555cc; }
-        button { margin: 5px 0; }
-        .section { margin-bottom: 30px; }
-        .list-item { margin-left: 15px; }
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #fff8f0; }
+        h1 { text-align: center; padding: 20px; color: #4a3f35; }
+        /* ====== Pestañas ====== */
+        .tabs { display: flex; background: #ffd6ba; }
+        .tab { flex: 1; padding: 15px; text-align: center; cursor: pointer; font-weight: bold; color: #4a3f35; transition: background 0.3s; }
+        .tab:hover { background: #ffc4a3; }
+        .tab.active { background: #ffa980; color: white; }
+        .content { display: none; padding: 20px; background: #fff3e0; }
+        .content.active { display: block; }
+        table { border-collapse: collapse; width: 100%; margin-top: 10px; background: #fff8f0; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        th { background: #ffd6ba; }
+        input, select, button { margin: 5px 0; padding: 5px; }
+        button { background: #ffa980; border: none; color: white; cursor: pointer; transition: background 0.3s; }
+        button:hover { background: #ff7a50; }
+        .success { color: green; font-weight: bold; }
+        .error { color: red; font-weight: bold; }
     </style>
 </head>
 <body>
 
-<h1>🎬 Sistema de Gestión de Cine</h1>
+<h1>Prueba Cine - Todos los Endpoints</h1>
 
-<!-- Asistentes -->
-<div class="section">
-    <h2>👤 Asistentes</h2>
-    <button id="btnListarAsistentes">Listar asistentes</button>
-    <ul id="listaAsistentes"></ul>
+<div class="tabs">
+    <div class="tab active" onclick="abrirTab(0)">Asistentes</div>
+    <div class="tab" onclick="abrirTab(1)">Películas</div>
+    <div class="tab" onclick="abrirTab(2)">Salas</div>
+    <div class="tab" onclick="abrirTab(3)">Proyecciones</div>
+    <div class="tab" onclick="abrirTab(4)">Entradas</div>
+    <div class="tab" onclick="abrirTab(5)">Asientos Libres</div>
+    <div class="tab" onclick="abrirTab(6)">Entradas de Asistente</div>
 </div>
 
-<!-- Películas -->
-<div class="section">
-    <h2>🎥 Películas</h2>
-    <button id="btnListarPeliculas">Listar películas</button>
-    <ul id="listaPeliculas"></ul>
+<!-- ====== CONTENIDOS ====== -->
+<div class="content active">
+    <h2>Asistentes</h2>
+    <button onclick="listarAsistentes()">Listar todos</button>
+    <table id="tablaAsistentes">
+        <thead><tr><th>ID</th><th>Nombre</th></tr></thead>
+        <tbody></tbody>
+    </table>
 </div>
 
-<!-- Proyecciones -->
-<div class="section">
-    <h2>🎞️ Proyecciones</h2>
-    <button id="btnListarProyecciones">Listar proyecciones</button>
-    <ul id="listaProyecciones"></ul>
+<div class="content">
+    <h2>Películas</h2>
+    <button onclick="listarPeliculas()">Listar todas</button>
+    <table id="tablaPeliculas">
+        <thead><tr><th>ID</th><th>Nombre</th></tr></thead>
+        <tbody></tbody>
+    </table>
 </div>
 
-<!-- Salas -->
-<div class="section">
-    <h2>🏟️ Salas</h2>
-    <button id="btnListarSalas">Listar salas</button>
-    <ul id="listaSalas"></ul>
+<div class="content">
+    <h2>Salas</h2>
+    <button onclick="listarSalas()">Listar todas</button>
+    <table id="tablaSalas">
+        <thead><tr><th>ID</th><th>Descripción</th><th># Butacas</th></tr></thead>
+        <tbody></tbody>
+    </table>
 </div>
 
-<!-- Butacas por sala -->
-<div class="section">
-    <h2>🪑 Butacas por sala</h2>
-    <input type="number" id="inputIdSala" placeholder="ID Sala" />
-    <button id="btnListarButacas">Listar butacas</button>
-    <ul id="listaButacas"></ul>
+<div class="content">
+    <h2>Proyecciones</h2>
+    <button onclick="listarProyecciones()">Listar todas</button>
+    <table id="tablaProyecciones">
+        <thead><tr><th>ID</th><th>Película</th><th>Sala</th><th>Fecha</th><th>Horario</th></tr></thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<div class="content">
+    <h2>Comprar Entrada</h2>
+    <label>Asistente ID: <input type="number" id="inputAsistenteId" min="1"></label><br>
+    <label>Proyección:
+        <select id="selectProyeccion" onchange="cargarAsientosLibres()"></select>
+    </label><br>
+    <label>Butaca:
+        <select id="selectButaca"></select>
+    </label><br>
+    <label>Precio: <input type="number" id="inputPrecio" step="0.1" value="10"></label><br>
+    <button onclick="comprarEntrada()">Comprar</button>
+    <div id="mensajeEntrada"></div>
+</div>
+
+<div class="content">
+    <h2>Asientos Libres por Proyección</h2>
+    <label>Proyección ID: <input type="number" id="inputProyeccionId"></label>
+    <button onclick="mostrarAsientosLibres()">Mostrar libres</button>
+    <table id="tablaAsientosLibres">
+        <thead><tr><th>ID Butaca</th><th>Fila</th><th>Número</th></tr></thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<div class="content">
+    <h2>Entradas de un Asistente</h2>
+    <label>Asistente ID: <input type="number" id="inputAsistenteEntradas"></label>
+    <button onclick="listarEntradasAsistente()">Listar</button>
+    <table id="tablaEntradasAsistente">
+        <thead><tr><th>ID Entrada</th><th>Precio</th><th>Fila</th><th>Butaca</th><th>Cancelada</th></tr></thead>
+        <tbody></tbody>
+    </table>
 </div>
 
 <script>
-    // Helper para limpiar listas
-    function limpiarLista(id) {
-        document.getElementById(id).innerHTML = '';
+    const apiBase = "http://localhost:8080";
+
+    // ====== CONTROL DE PESTAÑAS ======
+    function abrirTab(index) {
+        document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', i === index));
+        document.querySelectorAll('.content').forEach((c, i) => c.classList.toggle('active', i === index));
     }
 
-    // Helper para mostrar error
-    function mostrarError(id, error) {
-        const contenedor = document.getElementById(id);
-        contenedor.innerHTML = `<li style="color:red;">Error: ${error}</li>`;
+    // ====== FUNCIONES API ======
+    function listarAsistentes() {
+        fetch(`${apiBase}/asistentes`)
+            .then(res => res.json())
+            .then(data => {
+                const tbody = document.querySelector("#tablaAsistentes tbody");
+                tbody.innerHTML = "";
+                data.forEach(a => tbody.innerHTML += `<tr><td>${a.idAsistente}</td><td>${a.nombre}</td></tr>`);
+            });
     }
 
-    // Listar asistentes
-    document.getElementById('btnListarAsistentes').addEventListener('click', () => {
-        limpiarLista('listaAsistentes');
-        fetch('/asistentes')
+    function listarPeliculas() {
+        fetch(`${apiBase}/peliculas`)
             .then(res => res.json())
             .then(data => {
-                const ul = document.getElementById('listaAsistentes');
-                data.forEach(a => {
-                    const li = document.createElement('li');
-                    li.textContent = `${a.nombre} (ID: ${a.idAsistente})`;
-                    ul.appendChild(li);
-                });
-            })
-            .catch(err => mostrarError('listaAsistentes', err));
-    });
+                const tbody = document.querySelector("#tablaPeliculas tbody");
+                tbody.innerHTML = "";
+                data.forEach(p => tbody.innerHTML += `<tr><td>${p.idPelicula}</td><td>${p.nombre}</td></tr>`);
+            });
+    }
 
-    // Listar películas
-    document.getElementById('btnListarPeliculas').addEventListener('click', () => {
-        limpiarLista('listaPeliculas');
-        fetch('/peliculas')
+    function listarSalas() {
+        fetch(`${apiBase}/salas`)
             .then(res => res.json())
             .then(data => {
-                const ul = document.getElementById('listaPeliculas');
+                const tbody = document.querySelector("#tablaSalas tbody");
+                tbody.innerHTML = "";
+                data.forEach(s => tbody.innerHTML += `<tr><td>${s.idSala}</td><td>${s.descripcion}</td><td>${s.numButacas}</td></tr>`);
+            });
+    }
+
+    function listarProyecciones() {
+        fetch(`${apiBase}/proyecciones`)
+            .then(res => res.json())
+            .then(data => {
+                const tbody = document.querySelector("#tablaProyecciones tbody");
+                tbody.innerHTML = "";
+                const select = document.getElementById("selectProyeccion");
+                select.innerHTML = "";
                 data.forEach(p => {
-                    const li = document.createElement('li');
-                    li.textContent = `${p.titulo} (${p.anio}) - ID: ${p.idPelicula}`;
-                    ul.appendChild(li);
+                    tbody.innerHTML += `<tr><td>${p.idProyeccion}</td><td>${p.pelicula.nombre}</td><td>${p.sala.descripcion}</td><td>${p.fecha}</td><td>${p.horario}</td></tr>`;
+                    select.innerHTML += `<option value="${p.idProyeccion}">ID ${p.idProyeccion} - ${p.pelicula.nombre} (${p.fecha} ${p.horario})</option>`;
                 });
-            })
-            .catch(err => mostrarError('listaPeliculas', err));
-    });
+                cargarAsientosLibres();
+            });
+    }
 
-    // Listar proyecciones
-    document.getElementById('btnListarProyecciones').addEventListener('click', () => {
-        limpiarLista('listaProyecciones');
-        fetch('/proyecciones')
+    function cargarAsientosLibres() {
+        const idProyeccion = document.getElementById("selectProyeccion").value;
+        if (!idProyeccion) return;
+        fetch(`${apiBase}/entradas/libres?idProyeccion=${idProyeccion}`)
             .then(res => res.json())
             .then(data => {
-                const ul = document.getElementById('listaProyecciones');
-                data.forEach(p => {
-                    const fecha = p.fecha; // suponiendo campo fecha
-                    const hora = p.horario; // suponiendo campo horario
-                    const salaId = p.sala ? p.sala.idSala : 'N/A';
-                    const peliculaTitulo = p.pelicula ? p.pelicula.titulo : 'N/A';
-                    const li = document.createElement('li');
-                    li.textContent = `ID: ${p.idProyeccion} - ${peliculaTitulo} - Sala: ${salaId} - Fecha: ${fecha} ${hora}`;
-                    ul.appendChild(li);
-                });
-            })
-            .catch(err => mostrarError('listaProyecciones', err));
-    });
+                const select = document.getElementById("selectButaca");
+                select.innerHTML = "";
+                data.forEach(b => select.innerHTML += `<option value="${b.idButaca}">Fila ${b.fila} - Número ${b.numero}</option>`);
+            });
+    }
 
-    // Listar salas
-    document.getElementById('btnListarSalas').addEventListener('click', () => {
-        limpiarLista('listaSalas');
-        fetch('/salas')
-            .then(res => res.json())
-            .then(data => {
-                const ul = document.getElementById('listaSalas');
-                data.forEach(s => {
-                    const li = document.createElement('li');
-                    li.textContent = `Sala ID: ${s.idSala} - Nombre: ${s.nombre || 'Sin nombre'}`;
-                    ul.appendChild(li);
-                });
-            })
-            .catch(err => mostrarError('listaSalas', err));
-    });
+    function comprarEntrada() {
+        const idAsistente = document.getElementById("inputAsistenteId").value;
+        const idProyeccion = document.getElementById("selectProyeccion").value;
+        const idButaca = document.getElementById("selectButaca").value;
+        const precio = document.getElementById("inputPrecio").value;
+        const mensaje = document.getElementById("mensajeEntrada");
+        mensaje.textContent = "";
 
-    // Listar butacas por sala
-    document.getElementById('btnListarButacas').addEventListener('click', () => {
-        limpiarLista('listaButacas');
-        const idSala = document.getElementById('inputIdSala').value;
-        if (!idSala) {
-            mostrarError('listaButacas', 'Debe ingresar un ID de sala');
+        if (!idAsistente || !idProyeccion || !idButaca || !precio) {
+            mensaje.textContent = "Todos los campos son obligatorios.";
+            mensaje.className = 'error';
             return;
         }
-        fetch(`/butacas/sala/${idSala}`)
-            .then(res => {
-                if (!res.ok) throw new Error(`Error HTTP ${res.status}`);
-                return res.json();
-            })
+
+        fetch(`${apiBase}/entradas/entradas?idAsistente=${idAsistente}&idProyeccion=${idProyeccion}&idButaca=${idButaca}&precio=${precio}`, {
+            method: "POST"
+        })
+        .then(res => { if (!res.ok) throw new Error(); return res.json(); })
+        .then(data => {
+            mensaje.textContent = `Entrada comprada con éxito: ID ${data.idEntrada}`;
+            mensaje.className = 'success';
+            cargarAsientosLibres();
+        })
+        .catch(err => {
+            mensaje.textContent = "Error al comprar entrada (asiento ocupado, límite de 5 entradas o proyección pasada).";
+            mensaje.className = 'error';
+        });
+    }
+
+    function mostrarAsientosLibres() {
+        const idProyeccion = document.getElementById("inputProyeccionId").value;
+        if (!idProyeccion) return;
+        fetch(`${apiBase}/entradas/libres?idProyeccion=${idProyeccion}`)
+            .then(res => res.json())
             .then(data => {
-                const ul = document.getElementById('listaButacas');
-                data.forEach(b => {
-                    const li = document.createElement('li');
-                    li.textContent = `Butaca ID: ${b.idButaca} - Fila: ${b.fila} - Número: ${b.numero}`;
-                    ul.appendChild(li);
-                });
-            })
-            .catch(err => mostrarError('listaButacas', err));
-    });
+                const tbody = document.querySelector("#tablaAsientosLibres tbody");
+                tbody.innerHTML = "";
+                data.forEach(b => tbody.innerHTML += `<tr><td>${b.idButaca}</td><td>${b.fila}</td><td>${b.numero}</td></tr>`);
+            });
+    }
+
+    function listarEntradasAsistente() {
+        const idAsistente = document.getElementById("inputAsistenteEntradas").value;
+        if (!idAsistente) return;
+        fetch(`${apiBase}/entradas/asistente/${idAsistente}`)
+            .then(res => res.json())
+            .then(data => {
+                const tbody = document.querySelector("#tablaEntradasAsistente tbody");
+                tbody.innerHTML = "";
+                data.forEach(e => tbody.innerHTML += `<tr><td>${e.idEntrada}</td><td>${e.precio}</td><td>${e.fila}</td><td>${e.numeroButaca}</td><td>${e.cancelada}</td></tr>`);
+            });
+    }
+
+    // Inicializa lista de proyecciones al cargar
+    window.onload = () => { listarProyecciones(); };
 </script>
 
 </body>

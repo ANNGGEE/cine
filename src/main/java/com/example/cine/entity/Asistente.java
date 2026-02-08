@@ -16,7 +16,7 @@ public class Asistente {
 
     private String nombre;
 
-    @OneToMany(mappedBy = "asistente")
+    @OneToMany(mappedBy = "asistente", fetch = FetchType.EAGER)
     @ToString.Exclude  // Evitamos LazyInitializationException al imprimir
     @JsonIgnoreProperties("asistente") // Evitamos ciclos en JSON
     private List<Entrada> entradas;

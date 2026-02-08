@@ -71,8 +71,9 @@ public class EntradaController {
     }
 
     // ======================= ENTRADAS POR ASISTENTE ================================
-    @GetMapping("/asistente/{id_asistente}")
-    public ResponseEntity<List<EntradaDTO>> entradasPorAsistente(@PathVariable Long idAsistente){
+    @GetMapping("/asistente/{idAsistente}")
+    public ResponseEntity<List<EntradaDTO>> entradasPorAsistente(
+            @PathVariable Long idAsistente){
         return ResponseEntity.ok(
                 entradaService.entradasPorAsistente(idAsistente)
                         .stream()
