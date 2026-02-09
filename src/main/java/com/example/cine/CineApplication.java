@@ -12,4 +12,3 @@ public class CineApplication {
 		SpringApplication.run(CineApplication.class, args);
 	}
 }
-
