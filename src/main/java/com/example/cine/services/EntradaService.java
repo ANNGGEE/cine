@@ -8,6 +8,7 @@ import com.example.cine.repositories.ProyeccionRepository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -67,6 +68,9 @@ public class EntradaService {
         entrada.setFechacompra(LocalDateTime.now());
         entrada.setCancelada(false);
 
+        Entrada entradaGuardada = entradaRepository.save(entrada);
+        System.out.println("ID de la entrada: " + entradaGuardada.getIdEntrada());
+
         return entradaRepository.save(entrada);
     }
 
@@ -108,6 +112,9 @@ public class EntradaService {
             e.setCancelada(false);
             e.setPrecio(8.0);
 
+            Entrada entradaGuardada = entradaRepository.save(e);
+            System.out.println("ID de la entrada: " + entradaGuardada.getIdEntrada());
+
             entradaRepository.save(e);
         }
     }
@@ -143,6 +150,9 @@ public class EntradaService {
         entrada.setPrecio(precio);
         entrada.setFechacompra(LocalDateTime.now());
         entrada.setCancelada(false);
+
+        Entrada entradaGuardada = entradaRepository.save(entrada);
+        System.out.println("ID de la entrada: " + entradaGuardada.getIdEntrada());
 
         return entradaRepository.save(entrada);
     }
