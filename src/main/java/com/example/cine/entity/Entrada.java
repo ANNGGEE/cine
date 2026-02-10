@@ -1,5 +1,7 @@
 package com.example.cine.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -8,6 +10,9 @@ import java.time.LocalDateTime;
 
 @Entity
 @Data
+// No puede existir más de una entrada con la misma proyección y la misma butaca.
+// Una butaca solo puede venderse una vez por proyección
+// Da igual el asistente (Aunque se pruebe ya en el service con el existsByProyeccionAndButacaAndCanceladaFalse(...))
 @Table(
         uniqueConstraints = {
                 @UniqueConstraint(
@@ -28,6 +33,7 @@ public class Entrada{
 
     @ManyToOne
     @JoinColumn(name = "idProyeccion", nullable = false)
+    @JsonBackReference(value = "proyeccion-entrada") // JsonBackReference, se usa para evitar bucles infinitos en JSON
     private Proyeccion proyeccion;
 
     // @ManyToOne
@@ -41,6 +47,7 @@ public class Entrada{
 
     @ManyToOne
     @JoinColumn(name = "idButaca", nullable = false)
-    @JsonIgnoreProperties("entrada")
+    @JsonIgnoreProperties(value = "butaca-entrada")
+    @JsonBackReference
     private Butaca butaca;
 }

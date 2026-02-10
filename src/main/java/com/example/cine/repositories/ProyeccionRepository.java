@@ -16,6 +16,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProyeccionRepository extends JpaRepository<Proyeccion, Long>{
+    // Evitar el LazyInitializationException
     @Query("""
         SELECT p FROM Proyeccion p
         LEFT JOIN FETCH p.sala
@@ -23,6 +24,7 @@ public interface ProyeccionRepository extends JpaRepository<Proyeccion, Long>{
     """)
     List<Proyeccion> findAllWithSalaAndPelicula();
 
+    // Para una sola proyección
     @Query("""
         SELECT p FROM Proyeccion p
         LEFT JOIN FETCH p.sala

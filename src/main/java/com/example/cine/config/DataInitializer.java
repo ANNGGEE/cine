@@ -89,9 +89,10 @@ public class DataInitializer implements CommandLineRunner {
         for (Proyeccion pr : proyecciones) {
             List<Butaca> butacas = butacaRepository.findBySala_IdSala(pr.getSala().getIdSala());
 
+            // Asegura que no se intente usar más butacas de las que existen
             // 2 entradas activas
             for (int i = 0; i < Math.min(2, butacas.size()); i++) {
-                crearEntrada(asistentes.get(i), pr, butacas.get(i), false);
+                crearEntrada(asistentes.get(i), pr, butacas.get(i), false); // toma los primeros 2 asistentes de tu lista de asistentes, toma las primeras 2 butacas de la sala, false indica que no está cancelada
             }
 
             // 1 entrada cancelada

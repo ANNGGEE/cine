@@ -22,7 +22,7 @@ public class EntradaController {
     }
 
     @PostMapping("/entradas")
-    public ResponseEntity<EntradaDTO> comprarEntrada(@RequestParam Long idAsistente,
+    public ResponseEntity<?> comprarEntrada(@RequestParam Long idAsistente,
                                                      @RequestParam Long idProyeccion,
                                                      @RequestParam Long idButaca,
                                                      @RequestParam Double precio) {
@@ -40,28 +40,43 @@ public class EntradaController {
             return ResponseEntity.ok(dto);
 
         } catch (RuntimeException ex) {
-            return ResponseEntity.badRequest().body(null);
+            // Mandar el mensaje al cliente en Postman
+            return ResponseEntity
+                    .badRequest()
+                    .body(Map.of("error", ex.getMessage()));
         }
     }
 
     // ================== ASIENTOS LIBRES ============================
     @GetMapping("/libres")
-    public ResponseEntity<List<Butaca>> asientosLibres(
+    public ResponseEntity<?> asientosLibres(
             @RequestParam Long idProyeccion
     ){
-        return ResponseEntity.ok(
-                entradaService.asientosLibres(idProyeccion)
-        );
+        try {
+            List<Butaca> libres = entradaService.asientosLibres(idProyeccion);
+            return ResponseEntity.ok(libres);
+        } catch (RuntimeException ex) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(Map.of("mensaje", ex.getMessage()));
+        }
     }
 
     // ================== CANCELAR ENTRADA ============================
     @PutMapping("/cancelar/{idEntrada}")
     public ResponseEntity<Map<String, Object>> cancelarEntrada(@PathVariable Long idEntrada){
+        try{
         Entrada e = entradaService.cancelarEntrada(idEntrada);
         return ResponseEntity.ok(Map.of(
                 "idEntrada", e.getIdEntrada(),
-                "cancelada", e.getCancelada()
+                "cancelada", e.getCancelada(),
+                "mensaje", "Entrada cancelada correctamente"
         ));
+        } catch (RuntimeException ex) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(Map.of("mensaje", ex.getMessage()));
+        }
     }
 
     @GetMapping("/cancelables")
@@ -72,23 +87,36 @@ public class EntradaController {
 
     // ======================= ENTRADAS POR ASISTENTE ================================
     @GetMapping("/asistente/{idAsistente}")
-    public ResponseEntity<List<EntradaDTO>> entradasPorAsistente(
+    public ResponseEntity<?> entradasPorAsistente(
             @PathVariable Long idAsistente){
-        return ResponseEntity.ok(
-                entradaService.entradasPorAsistente(idAsistente)
-                        .stream()
-                        .map(EntradaMapper::toDTO)
-                        .toList()
-        );
+        try {
+            List<EntradaDTO> dtoList = entradaService.entradasPorAsistente(idAsistente)
+                    .stream()
+                    .map(EntradaMapper::toDTO)
+                    .toList();
+            return ResponseEntity.ok(dtoList);
+        } catch (RuntimeException ex) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(Map.of("mensaje", ex.getMessage()));
+        }
     }
 
     // ======================== OCUPACIÓN PROYECCIÓN =============================
     @GetMapping("/ocupacion/{idProyeccion}")
-    public ResponseEntity<Long> ocupacionProyeccion(
+    public ResponseEntity<?> ocupacionProyeccion(
             @PathVariable Long idProyeccion
     ){
-        return ResponseEntity.ok(
-                entradaService.ocupacionProyeccion(idProyeccion)
-        );
+        try {
+            Long ocupacion = entradaService.ocupacionProyeccion(idProyeccion);
+            return ResponseEntity.ok(Map.of(
+                    "idProyeccion", idProyeccion,
+                    "ocupacion", ocupacion
+            ));
+        } catch (RuntimeException ex) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(Map.of("mensaje", ex.getMessage()));
+        }
     }
 }

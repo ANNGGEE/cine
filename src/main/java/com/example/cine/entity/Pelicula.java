@@ -1,5 +1,7 @@
 package com.example.cine.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,6 +23,8 @@ public class Pelicula {
     private String genero;
 
     @OneToMany(mappedBy = "pelicula", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnore
+    @JsonBackReference
     private List<Proyeccion> proyecciones;
 
     @Override

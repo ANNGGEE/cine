@@ -29,6 +29,7 @@ public class EntradaService {
     }
 
     // =================================== COMPRA DE ENTRADA =============================================
+    // Compra manual específica
     @Transactional
     public Entrada comprarEntrada(Long idAsistente, Long idProyeccion, Long idButaca, Double precio) {
         if (precio <= 0) throw new RuntimeException("Precio inválido");
@@ -92,8 +93,9 @@ public class EntradaService {
                 .collect(Collectors.toList());
     }
 
-    // Comprar entradas (transaccional)
-    @Transactional
+    // Comprar entradas (transaccional), compra una sola entrada especificando exactamente el asiento
+    // Compra múltiple de varios asientos libres
+    @Transactional // Garantiza que todo el proceso de validación y guardado sea atómico, si falla cualquier regla (ej: asiento ocupado), no se guarda nada
     public void comprarEntradas(Asistente asistente, Proyeccion proyeccion, int cantidad) {
         List<Butaca> libres = obtenerButacasLibres(proyeccion);
 
@@ -120,6 +122,7 @@ public class EntradaService {
     }
 
     // =================== COMPRA AUTOMÁTICA (PRIMER ASIENTO LIBRE) =========
+    // Compra una entrada automática, asignando la primera butaca libre disponible , compra rápida de un asiento
     @Transactional
     public Entrada comprarEntradaAutomatica(Long idAsistente, Long idProyeccion, Double precio) {
         Proyeccion proyeccion = proyeccionRepository.findById(idProyeccion)

@@ -1,7 +1,10 @@
 package com.example.cine.entity;
 
 import ch.qos.logback.core.pattern.util.AlmostAsIsEscapeUtil;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,69 +33,14 @@ public class Proyeccion {
 
     @ManyToOne
     @JoinColumn(name = "idPelicula", nullable = false)
+    @JsonBackReference
     private Pelicula pelicula;
 
     @OneToMany(mappedBy = "proyeccion", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Entrada> entradas;
 
     @ManyToMany(mappedBy = "proyecciones")
     @JsonIgnoreProperties({"entradas", "proyecciones"})
     private List<Asistente> asistentes;
 }
-
-//    public Long getIdProyeccion() {
-//        return idProyeccion;
-//    }
-//
-//    public void setIdProyeccion(Long idProyeccion) {
-//        this.idProyeccion = idProyeccion;
-//    }
-//
-//    public LocalTime getHorario() {
-//        return horario;
-//    }
-//
-//    public void setHorario(LocalTime horario) {
-//        this.horario = horario;
-//    }
-//
-//    public Pelicula getPelicula() {
-//        return pelicula;
-//    }
-//
-//    public void setPelicula(Pelicula pelicula) {
-//        this.pelicula = pelicula;
-//    }
-//
-//    public List<Entrada> getEntradas() {
-//        return entradas;
-//    }
-//
-//    public void setEntradas(List<Entrada> entradas) {
-//        this.entradas = entradas;
-//    }
-//
-//    public List<Asistente> getAsistentes() {
-//        return asistentes;
-//    }
-//
-//    public void setAsistentes(List<Asistente> asistentes) {
-//        this.asistentes = asistentes;
-//    }
-//
-//    public LocalDate getFecha() {
-//        return fecha;
-//    }
-//
-//    public void setFecha(LocalDate fecha) {
-//        this.fecha = fecha;
-//    }
-//
-//    public Sala getSala() {
-//        return sala;
-//    }
-//
-//    public void setSala(Sala sala) {
-//        this.sala = sala;
-//    }
-//}

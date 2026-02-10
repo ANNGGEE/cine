@@ -1,6 +1,7 @@
 package com.example.cine.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
@@ -30,19 +31,6 @@ public class Butaca {
 
     @OneToMany(mappedBy = "butaca")
     @ToString.Exclude // @ToString.Exclude le dice a Lombok que NO incluya ese atributo en el método toString() que genera automáticamente para la clase.
-    @JsonIgnoreProperties("entradas")
+    @JsonManagedReference(value = "butaca-entrada")
     private List<Entrada> entradas;
-
-//    @Override
-//    public boolean equals(Object o) {
-//        if (this == o) return true;
-//        if (!(o instanceof Butaca)) return false;
-//        Butaca b = (Butaca) o;
-//        return idButaca != null && idButaca.equals(b.getIdButaca());
-//    }
-//
-//    @Override
-//    public int hashCode() {
-//        return 31;
-//    }
 }

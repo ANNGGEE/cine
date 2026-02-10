@@ -29,6 +29,8 @@ public class AsistenteService {
         return asistenteRepository.save(asistente);
     }
 
+    // El método solo lee, no modifica nada, una transacción abre sesión en la BD,
+    //  ejecuta consultas y cierra sesión, clave para la consistencia de datos y rendimiento
     @Transactional(readOnly = true)
     // ================== OBTENER TODOS LOS ASISTENTES ==========================
     public List<AsistenteDTO> obtenerTodosDTO() {

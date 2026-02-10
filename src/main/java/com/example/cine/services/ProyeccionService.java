@@ -42,6 +42,8 @@ public class ProyeccionService{
     }
 
     // =================== OBTENER PAGINADO ========================
+    // Pageable define qué página quieres, cuántos elementos y cómo ordenarlos
+    //findAll(pageable) devuelve un Page<T> con datos y metadatos de paginación
     public Page<Proyeccion> obtenerPaginado(Pageable pageable){
         return proyeccionRepository.findAll(pageable);
     }

@@ -9,6 +9,7 @@ import com.example.cine.services.EntradaService;
 import com.example.cine.services.ProyeccionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
@@ -88,7 +89,7 @@ public class ProyeccionController {
     // =========================== OBTENEMOS PROYECCIONES POR FECHA ===============================
     @GetMapping("/fecha/paginado")
     public Page<Proyeccion> proyeccionesPorFechaPaginado(
-            @RequestParam LocalDate fecha,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha,
             Pageable pageable
     ) {
         return proyeccionService.obtenerPorFecha(fecha, pageable);

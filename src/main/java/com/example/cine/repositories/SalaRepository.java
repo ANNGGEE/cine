@@ -11,6 +11,8 @@ import java.util.List;
 
 @Repository
 public interface SalaRepository extends JpaRepository<Sala, Long> {
+    // Por defecto es LAZY
+    //Con JOIN FETCH se le dice a JPA que cuando traiga sala se traiga también sus proyecciones en la misma query
     @Query("SELECT s FROM Sala s JOIN FETCH s.proyecciones WHERE s.idSala = :id")
     Sala findByIdWithProyecciones(@Param("id") Long id);
 }
