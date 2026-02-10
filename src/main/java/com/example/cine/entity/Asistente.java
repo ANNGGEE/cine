@@ -16,9 +16,9 @@ public class Asistente {
 
     private String nombre;
 
-    @OneToMany(mappedBy = "asistente", fetch = FetchType.LAZY) // LAZY, las entradas no se cargan automáticamente al traer un asistente
+    @OneToMany(mappedBy = "asistente", fetch = FetchType.LAZY)
     @ToString.Exclude  // Evitamos LazyInitializationException al imprimir
-    @JsonIgnoreProperties("asistente") // Evitamos ciclos en JSON, el JSON no incluirá otra vez el asistente dentro de cada entrada, evitando bucles infinitos
+    @JsonIgnoreProperties("asistente") // Evitamos ciclos en JSON
     private List<Entrada> entradas;
 
     @ManyToMany
@@ -31,6 +31,3 @@ public class Asistente {
     @JsonIgnoreProperties("asistentes")
     private List<Proyeccion> proyecciones;
 }
-// EL ToString.Exclude: Evita que Lombok incluya el campo en toString().
-// Beneficio	Previene recursión infinita en relaciones bidireccionales.
-// Uso típico	Campos @OneToMany o @ManyToMany que referencian la misma entidad.

@@ -27,6 +27,7 @@ public class Sala {
     }
 
     @OneToMany(mappedBy = "sala", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("sala") // evita bucle con Butaca
     @ToString.Exclude
     private List<Proyeccion> proyecciones;
 

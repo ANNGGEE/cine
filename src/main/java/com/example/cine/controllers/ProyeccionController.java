@@ -4,6 +4,7 @@ package com.example.cine.controllers;
 import com.example.cine.dto.ProyeccionDTO;
 import com.example.cine.entity.Proyeccion;
 import com.example.cine.mappers.PeliculaMapper;
+import com.example.cine.mappers.ProyeccionMapper;
 import com.example.cine.mappers.SalaMapper;
 import com.example.cine.services.EntradaService;
 import com.example.cine.services.ProyeccionService;
@@ -29,7 +30,13 @@ public class ProyeccionController {
     // ============= CREAR PROYECCIÓN ================
     @PostMapping("/crear")
     public ResponseEntity<Proyeccion> crearProyeccion(@RequestBody Proyeccion proyeccion, @RequestParam Long idPelicula, @RequestParam Long idSala){
-        return ResponseEntity.ok(proyeccionService.crearProyeccion(proyeccion, idPelicula, idSala));
+       return ResponseEntity.ok(proyeccionService.crearProyeccion(proyeccion, idPelicula, idSala));
+//        // Creamos la proyección usando el service
+//        Proyeccion p = proyeccionService.crearProyeccion(proyeccion, idPelicula, idSala);
+//
+//        // Convertimos la entidad a DTO
+//        ProyeccionDTO dto = ProyeccionMapper.toDTO(p);
+//        return ResponseEntity.ok(dto);
     }
 
     // =============== OBTENER PAGINADO =======================
